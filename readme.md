@@ -1,6 +1,6 @@
 # Designs by Tabitha
 
-## [Live Site](designsbytabitha.ca)
+## [Live Site](https://www.designsbytabitha.ca)
 
 My first project using PHP, I learned as I built.<br>
 <br>
