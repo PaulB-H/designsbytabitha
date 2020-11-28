@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-180184444-1"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-180184444-1');
+    </script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-control" content="public, max-age=3600">
+    <!--Cache-Control: max-age=3600-->
+    <title>Designs by Tabitha</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Comfortaa&amp;family=Playfair+Display:wght@500&amp;display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css"
+    integrity="sha512-O03ntXoVqaGUTAeAmvQ2YSzkCvclZEcPQu1eqloPaHfJ5RuNGiS4l+3duaidD801P50J28EHyonCV06CUlTSag=="
+    crossorigin="anonymous" />
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+
+    <style>
+        /* Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            /* font-family: 'Comfortaa', cursive; */
+            /* font-family: 'Playfair Display', serif; */
+            outline: none;
+        }
+
+        /* Custom Setting Classes */
+        .d-none {
+            display: none;
+        }
+
+        .spacer {
+            height: 50vh;
+            background-image: url('/images/patterns/triangle_mosaic.png');
+        }
+
+        .sticky {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: white;
+            margin-bottom: 0;
+        }
+
+        .sticky+#content {
+            padding-top: 117px;
+        }
+
+        #header {
+            display: flex;
+            margin: 50px;
+        }
+
+        #header img {
+            align-self: flex-start;
+            min-height: 226px;
+        }
+
+        .header-text {
+            margin: 50px;
+            font-family: 'Comfortaa', cursive;
+            white-space: nowrap;
+        }
+
+        #navbar {
+            font-family: 'Playfair Display', serif;
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            width: 100%;
+            margin-bottom: 50px;
+        }
+
+        #navbar p {
+            font-size: 200%;
+            border-bottom: 3px solid #565080;
+        }
+
+        #navbar p:hover,
+        #scrollTop:hover {
+            cursor: pointer;
+        }
+
+        #content {
+            max-width: 960px;
+            margin: auto;
+        }
+
+        .content-box {
+            position: relative;
+            width: 100%;
+            height: 600px;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .link-img {
+            width: 350px;
+            height: 350px;
+            margin: -25px;
+            clip-path: polygon(40% 0, 60% 0, 100% 40%, 100% 60%,
+                    60% 100%, 40% 100%, 0 60%, 0 40%);
+            padding-left: 35px;
+            padding-right: 35px;
+            background: white;
+
+        }
+
+        #box1-frame-img {
+            position: absolute;
+            max-height: 105%;
+            min-height: 105%;
+            margin-top: -7px;
+            height: 100%
+        }
+
+        #box2-frame-img {
+            position: absolute;
+            max-height: 75%;
+            min-height: 75%;
+            margin-top: -7px;
+        }
+
+        #box3-frame-img {
+            position: absolute;
+            margin-top: -7px;
+            max-height: 100%;
+            min-height: 100%;
+        }
+
+        .link-label {
+            position: absolute;
+            margin: auto;
+            bottom: 0;
+            left: 0;
+            right: 10px;
+            text-align: center;
+            background: white;
+            clip-path: polygon(90% 0, 75% 100%,
+                    25% 100%, 10% 0%);
+            color: black;
+            line-height: 20px;
+        }
+
+        .label-sub-header {
+            font-size: 20px;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .footer {
+            background: #565080;
+            color: lightgray;
+            position: relative;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center
+        }
+
+        .footer i {
+            margin-left: 5px;
+            margin-top: 2px;
+            font-size: 90%;
+        }
+
+        #go-top {
+            position: fixed;
+            right: 0;
+            bottom: 50px;
+            font-weight: bold;
+            text-align: center;
+            background: white;
+            z-index: 1000;
+            display: none;
+            font-family: 'Playfair Display', serif;
+            margin-right: 10px;
+            padding: 10px;
+            border: 1px solid lightgray;
+            border-radius: 100px
+        }
+
+        #go-top:hover {
+            cursor: pointer;
+        }
+
+        /* Ko-fi Settings */
+        #Ko-fi-container {
+            background: white;
+            position: fixed;
+            left: 20px;
+            bottom: 30px;
+            z-index: 20000;
+            border-radius: 30px;
+            padding: 5px;
+            border: 1px solid #DFDFDF;
+        }
+
+        .Ko-fi-text {
+            margin: 0 10px 10px 50px;
+            font-family: 'Comfortaa', cursive;
+            background: white;
+        }
+
+        .Ko-fi-icon {
+            max-width: 75px;
+            margin-bottom: 3px;
+            position: absolute;
+            bottom: 0;
+        }
+
+        .Ko-fi-sub-header {
+            margin-left: 30px;
+            font-size: 40px;
+        }
+
+        .fa-mouse-pointer {
+            -webkit-text-stroke: 2px black;
+            position: absolute;
+            right: 50px;
+            bottom: 25px;
+            font-size: 500%;
+            color: white;
+            z-index: 999;
+            display: none !important;
+        }
+
+        @media only screen and (max-width: 429px) {
+
+            .sticky+#content {
+                padding-top: 184px !important;
+            }
+        }
+
+        @media only screen and (max-width: 500px) {
+
+            #header,
+            .header-text {
+                margin-top: 10px !important;
+            }
+
+            #Ko-fi-container {
+                bottom: 30px !important;
+                left: 10px !important;
+            }
+
+            .Ko-fi-text {
+                display: none;
+            }
+
+            .Ko-fi-icon {
+                position: relative !important;
+                max-width: 60px !important;
+            }
+
+            #go-top {
+                bottom: 30px !important;
+            }
+        }
+
+        @media only screen and (max-width: 845px) {
+            #header {
+                flex-direction: column;
+                align-items: center;
+                margin-bottom: 0;
+                margin-left: 0;
+                margin-right: 0;
+                overflow: hidden;
+            }
+
+            #header img {
+                align-self: center;
+            }
+
+            .header-text {
+                margin: 25px 0 0 0;
+                text-align: center;
+            }
+
+            #header-br {
+                display: none;
+            }
+
+            #navbar p:nth-child(2) {
+                margin-left: 7px;
+                margin-right: 7px;
+            }
+        }
+    </style>
+
+</head>
+
+<body>
+
+
+    <div id="header">
+        <img loading="eager" src="/images/vector/header.svg" alt="">
+        <div class="header-text">
+            <h3>
+                Designs By
+                <span class="header-br"><br></span>
+                Tabitha Bernard
+            </h3>
+            <p>
+                416-899-4131
+                <span class="header-br"><br></span>
+                <a href="mailto:tabitha@designsbytabitha.ca">
+                    tabitha
+                    <br>
+                    @designsbytabitha.ca
+                </a>
+            </p>
+        </div>
+    </div>
+
+    <div id="navbar" style="z-index: 1000;">
+        <p id="nav1">Face Masks</p>
+        <p id="nav2">Interiors</p>
+        <p id="nav3">Artwork</p>
+    </div>
+
+    <div id="content">
+
+        <div class="spacer spacer1"></div>
+
+        <div id="box1" class="content-box">
+            <img id="box1-frame-img" src="/images/vector/flourish_frame3.svg" alt="">
+            <div style="position: relative">
+                <a href="mask_page.html">
+                    <img class="link-img" src="/images/homepage/link_masks.jpg" alt="image-link to masks page">
+                    <i class="fas fa-mouse-pointer"></i>
+                    <p class="link-label">
+                        click for
+                        <br>
+                        <span class="label-sub-header">FACE MASKS</span>
+                    </p>
+                </a>
+            </div>
+        </div>
+
+        <div class="spacer spacer2" style="background-image: url('/images/patterns/greek_vase.png');"></div>
+
+        <div id="box2" class="content-box">
+            <img id="box2-frame-img" src="/images/vector/flourish_frame2.svg" alt="">
+            <div style="position: relative">
+                <a onclick="pageError()">
+                    <img class="link-img" src="/images/homepage/link_interiors.jpg" alt="image-link to interiors page">>
+                    <i class="fas fa-mouse-pointer"></i>
+                    <p class="link-label">
+                        click for
+                        <br>
+                        <span class="label-sub-header">INTERIORS</span>
+                    </p>
+                </a>
+            </div>
+        </div>
+
+        <div class="spacer spacer3"></div>
+
+        <div id="box3" class="content-box">
+            <img id="box3-frame-img" src="/images/vector/flourish_frame1.svg" alt="">
+            <div style="position: relative; user-select: none;  ">
+                <a style="outline: none;" onclick="pageError()">
+                    <img class="link-img" src="/images/homepage/link_art.jpg" alt="image-link to art page">>
+                    <i class="fas fa-mouse-pointer"></i>
+                    <p class="link-label">
+                        click for
+                        <br>
+                        <span class="label-sub-header">ART</span>
+                    </p>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div id="go-top">
+        <div>
+            <i class="fas fa-arrow-up" style="font-size: 200%"></i>
+        </div>
+        <div>Top</div>
+    </div>
+
+    <a href="https://ko-fi.com/tabithabernard">
+        <div id="Ko-fi-container" style="display: none;">
+            <p class="Ko-fi-text">
+                Buy me a
+                <br>
+                <span class="Ko-fi-sub-header">Ko-fi</span>
+            </p>
+            <img class="Ko-fi-icon" src="/images/icons/Ko-fi_small.png" alt="">
+        </div>
+    </a>
+
+    <!-- Footer inside link container -->
+    <a href="https://www.webbypaul.ca" target="_blank">
+        <div class="footer">
+            &copy; Web by Paul <i class="fas fa-link"></i>
+        </div>
+    </a>
+
+    <div id="my-script-box" style="display: none;">
+        <script src="https://code.jquery.com/jquery-3.5.0.min.js"
+            integrity="sha256-xNzN2a4ltkB44Mc/Jz3pT4iU1cmeR0FkXs4pru/JxaQ=" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+            integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+            crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+            integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+            crossorigin="anonymous"></script>
+        <script src="https://kit.fontawesome.com/301fc3fb33.js" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"
+            integrity="sha512-Zq9o+E00xhhR/7vJ49mxFNJ0KQw1E1TMWkPTxrWcnpfEFDEXgUiwJHIKit93EW/XxE31HSI5GEOW06G6BF1AtA=="
+            crossorigin="anonymous"></script>
+
+        <script>
+
+            function pageError(){
+                iziToast.warning({
+                    title: 'Not yet ready!',
+                    message: 'Come back tomorrow',
+                    overlay: 'true',
+                    position: "center",
+                    overlayClose: true,
+                });
+            }
+
+            var sticky = 0;
+            var navbar;
+            $(window).on("load", function () {
+
+                navbar = document.getElementById("navbar");
+                sticky = $("#header").outerHeight(true);
+
+                window.onscroll = () => {
+
+                    if (window.pageYOffset >= sticky) {
+                        navbar.classList.add("sticky")
+                    } else {
+                        navbar.classList.remove("sticky");
+                    }
+
+                    if (window.pageYOffset > 400) {
+                        $("#go-top").fadeIn();
+                    } else {
+                        $("#go-top").fadeOut();
+                    }
+
+                    $("#header").outerHeight(true);
+
+                    var spacer1 = $(".spacer1").offset();
+                    var spacer1top = spacer1.top - 100;
+                    var spacer2 = $(".spacer2").offset();
+                    var spacer2top = spacer2.top - 100;
+                    var spacer3 = $(".spacer3").offset();
+                    var spacer3top = spacer3.top - 100;
+
+                    if ($(window).scrollTop() < $("#header").outerHeight(true)) {
+                        console.log("Clear all nav bold")
+                        $("#nav1,#nav2,#nav3").removeAttr("style");
+                    }
+                    else if ($(window).scrollTop() > spacer1top && $(window).scrollTop() < spacer2top) {
+                        console.log("Bold nav 1")
+                        $("#nav1,#nav2,#nav3").removeAttr("style");
+                        $("#nav1").css("border-bottom", "3px solid red");
+                    }
+                    else if ($(window).scrollTop() > spacer2top && $(window).scrollTop() < spacer3top) {
+                        console.log("Bold nav 2")
+                        $("#nav1,#nav2,#nav3").removeAttr("style");
+                        $("#nav2").css("border-bottom", "3px solid red");
+                    }
+                    else if ($(window).scrollTop() > spacer3top) {
+                        console.log("Bold nav 3")
+                        $("#nav1,#nav2,#nav3").removeAttr("style");
+                        $("#nav3").css("border-bottom", "3px solid red");
+                    }
+
+                }
+
+                var i;
+                for (i = 0; i < 4; i++) {
+
+                    let box = "#box";
+                    let currentBox = box + i;
+                    var boxOffset;
+
+                    $("#nav" + i).click(function () {
+                        if ($(window).height() < 600) {
+                            console.log("Condition 1")
+
+                            boxOffset = $(currentBox).offset().top;
+
+                            $([document.documentElement, document.body]).animate({
+                                scrollTop: boxOffset - $("#navbar").outerHeight() + 100
+                            }, 1000);
+
+                        }
+                        else if ($(window).width() < 846) {
+                            console.log("Condition 2")
+
+                            boxOffset = $(currentBox).offset().top;
+
+                            $([document.documentElement, document.body]).animate({
+                                scrollTop: boxOffset - $("#navbar").outerHeight()
+                            }, 1000);
+                        }
+                        else {
+                            console.log("Condition 3")
+
+                            boxOffset = $(currentBox).offset().top;
+
+                            $([document.documentElement, document.body]).animate({
+                                scrollTop: boxOffset - $("#navbar").outerHeight(true) - 67
+                            }, 1000);
+                        };
+                    });
+                }
+
+                $("#go-top").click(function () {
+                    $([document.documentElement, document.body]).animate({
+                        scrollTop: $("html").offset().top
+                    }, 1000);
+                });
+
+            });
+
+            $(window).resize(function () {
+                sticky = $("#header").outerHeight(true);
+            });
+
+        </script>
+
+    </div>
+
+</body>
+
+</html>

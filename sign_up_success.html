@@ -1,0 +1,50 @@
+<?php
+
+    include("./session_start.php");
+    
+    if($_SESSION["user"] != ""){
+        $to = "p.bernardhall@gmail.com";
+        $subject = "New User";
+        $txt = "New user signed up!";
+        $headers = "From: tabitha@designsbytabitha.ca";
+        mail($to,$subject,$txt,$headers);
+    }
+    
+?>
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" type="text/css" href="login_test.css" />
+		<style>
+			.error {
+				color: #ff0000;
+			}
+		</style>
+	</head>
+	<body>
+		<div
+			style="
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+			"
+		>
+			<h1>Sign-up Successfull!</h1>
+			<h3>
+				Welcome
+				<?php echo $_SESSION["user"]; ?>
+			</h3>
+			<!--<button onclick="location.href = 'https://www.designsbytabitha.ca/sign_up.html';">Back to signup page?</button>-->
+			<br /><br />
+			<button
+				onclick="location.href = 'https://www.designsbytabitha.ca/session.html';"
+				style="font-size: 150%"
+			>
+				Back to session test page
+			</button>
+		</div>
+	</body>
+</html>
