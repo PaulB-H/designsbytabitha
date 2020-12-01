@@ -8,4 +8,4 @@ I enjoyed how easy PHP sessions were to use, and got some expirence using SQL Pr
 <br>
 I also created a login / user system, and a shopping cart / order management system. No payment is setup through the site yet, it is just to make it easier to manage orders for the client so far.<br>
 <br>
-Test commit
+Commit to test stored credentials
