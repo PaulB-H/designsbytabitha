@@ -74,7 +74,7 @@
       </div>
     </div>
 
-    <a id="back-btn" href="https://www.designsbytabitha.ca"> Back </a>
+    <a id="back-btn" href="../home.html"> Back </a>
 
     <div id="account">
       <button
@@ -205,7 +205,7 @@
           <br />
           <span class="Ko-fi-sub-header">Coffee</span>
         </p>
-        <img class="Ko-fi-icon" src="images/icons/Ko-fi_small.png" />
+        <img class="Ko-fi-icon" src="../images/icons/Ko-fi_small.png" />
       </div>
     </a>
 
@@ -315,17 +315,17 @@
         // }, 5000);
 
         function getMasks() {
-          // console.log("getMasks() called")
+          console.log("getMasks() called")
           $.ajax({
-            url: "get_masks.php",
+            url: "../php/get_masks.php",
             type: "get",
             dataType: "JSON",
             success: function (response) {
               if (_.isEqual(lastResponse, response)) {
-                // console.log("DB Objects same, no update needed");
+                console.log("DB Objects same, no update needed");
               } else {
                 // console.log("DB Objects different");
-                // console.log(response)
+                console.log(response)
                 let len = response.length;
                 var i;
                 for (i = 0; i < len; i++) {
@@ -336,7 +336,7 @@
                     // console.log("Item does not exist, creating new mask_item");
                     let mask_item = `
                       <div class="item-container" id="${fabricname}">
-                          <img loading=lazy class="maskimg"  src="${imgurl}">
+                          <img loading=lazy class="maskimg"  src="../${imgurl}">
                           <div class="detail-container">
 
                               <h1> ${fabricname} </h1>
