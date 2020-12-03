@@ -1,0 +1,293 @@
+* {
+  margin: 0;
+  padding: 0;
+  scrollbar-width: thin;
+}
+
+#cartDiv {
+  background-image: url(./images/vector/header.svg);
+  overflow: scroll;
+  background-size: cover;
+}
+
+#cartDiv button {
+  border: none;
+  padding: 3px 3px;
+  max-width: 229px;
+  width: 100%;
+  border: 2px solid black;
+}
+
+#cartItemDiv {
+  background: none;
+  min-width: 229px;
+  box-shadow: 0 0 10px;
+}
+.cartItem {
+  border: 1px solid black;
+  padding: 10px;
+  background: white;
+  margin: 10px;
+}
+.iziToast-wrapper {
+  z-index: 100002;
+}
+.iziToast-overlay {
+  z-index: 100001;
+}
+
+h1,
+h3 {
+  font-family: "Playfair Display", serif;
+}
+
+/* Custom Setting-Classes */
+.no-wrap {
+  white-space: nowrap;
+}
+
+.overflow-hidden {
+  overflow: hidden;
+}
+
+.d-none {
+  display: none;
+}
+
+.d-flex {
+  display: flex;
+}
+
+#back-btn {
+  font-family: "Comfortaa", cursive;
+  margin: 5px;
+  background: #575084;
+  color: white;
+  padding: 20px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  clip-path: polygon(
+    40% 13%,
+    40% 30%,
+    100% 30%,
+    100% 70%,
+    40% 70%,
+    40% 87%,
+    0% 50%
+  );
+}
+
+.main-header {
+  text-align: center;
+  max-width: 300px;
+  margin: auto;
+  margin-top: 50px;
+}
+
+.header-hr {
+  max-width: 50%;
+  margin: auto;
+}
+
+.size-table {
+  display: flex;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
+  max-width: 960px;
+  padding-left: 20px;
+  padding-right: 20px;
+  margin: auto;
+  margin-bottom: 10px;
+}
+
+.size-table p {
+  font-family: "Comfortaa", cursive;
+  margin-left: 3px;
+  margin-right: 3px;
+  margin-bottom: 0;
+}
+
+.made-2-order-msg {
+  max-width: 600px;
+  text-align: center;
+  margin: auto;
+}
+
+.maskimg,
+.overlay-img {
+  padding: 5px;
+  max-width: 50%;
+  clip-path: circle(50% at 50% 50%);
+  -webkit-clip-path: circle(50% at 50% 50%);
+  /* -webkit-clip-path: polygon(50% 0%, 83% 12%, 100% 43%, 94% 78%,
+                    68% 100%, 32% 100%, 6% 78%, 0% 43%, 17% 12%);
+            clip-path: polygon(50% 0%, 83% 12%, 100% 43%, 94% 78%, 68% 100%,
+                    32% 100%, 6% 78%, 0% 43%, 17% 12%); */
+}
+
+.maskimg:hover {
+  cursor: pointer;
+}
+
+#mask-item-container {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.item-container {
+  max-width: 30%;
+  text-align: center;
+}
+
+.item-container p {
+  font-family: "Comfortaa", cursive;
+}
+
+.detail-container {
+  background: white;
+  text-align: center;
+}
+.detail-container h1 {
+  font-variant-caps: small-caps;
+}
+.detail-container button {
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.stock-count-num-only {
+  font-size: 150%;
+  font-weight: bold;
+  vertical-align: middle;
+}
+
+.overlay {
+  position: fixed;
+  z-index: 20000;
+  max-width: 100%;
+  max-height: 100%;
+  justify-content: center;
+  align-items: center;
+  background: rgba(105, 105, 105, 0.9);
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.overlay-img {
+  max-width: 100% !important;
+  max-height: 80vh !important;
+}
+
+.overlay-details {
+  background: lightgray;
+  max-width: 75%;
+}
+
+.footer {
+  background: #565080;
+  color: lightgray;
+  text-align: center;
+}
+
+.footer i {
+  margin-left: 5px;
+  margin-top: 2px;
+  font-size: 90%;
+}
+
+#go-top {
+  position: fixed;
+  right: 0;
+  bottom: 50px;
+  font-weight: bold;
+  text-align: center;
+  background: white;
+  z-index: 1000;
+  display: none;
+  font-family: "Playfair Display", serif;
+  margin-right: 10px;
+  padding: 10px;
+  border: 1px solid lightgray;
+  border-radius: 100px;
+}
+
+#go-top:hover {
+  cursor: pointer;
+}
+
+/* Ko-fi Settings */
+#Ko-fi-container {
+  background: white;
+  position: fixed;
+  left: 20px;
+  bottom: 30px;
+  z-index: 19000;
+  border-radius: 30px;
+  padding: 5px;
+  border: 1px solid #dfdfdf;
+}
+
+.Ko-fi-text {
+  margin: 0 10px 10px 70px;
+  font-family: "Comfortaa", cursive;
+  background: white;
+  line-height: 30px;
+}
+
+.Ko-fi-icon {
+  max-width: 75px;
+  margin-bottom: 3px;
+  position: absolute;
+  bottom: 0;
+}
+
+.Ko-fi-sub-header {
+  margin-left: 10px;
+  font-size: 30px;
+}
+
+@media only screen and (max-width: 500px) {
+  .main-header {
+    margin-top: 100px;
+  }
+
+  #Ko-fi-container {
+    bottom: 10px !important;
+    left: 10px !important;
+  }
+
+  .Ko-fi-text {
+    display: none;
+  }
+
+  .Ko-fi-icon {
+    position: relative !important;
+    max-width: 60px !important;
+  }
+
+  #go-top {
+    bottom: 30px !important;
+  }
+
+  .maskimg {
+    max-width: 100%;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  img {
+    max-width: 75%;
+  }
+
+  .item-container {
+    max-width: 50%;
+  }
+
+  h1 {
+    font-size: 2rem;
+  }
+}
