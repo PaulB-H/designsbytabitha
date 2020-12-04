@@ -1,9 +1,9 @@
 <?php
 
-    include("./session_start.php");
+    include("../php/session_start.php");
 
     if($_SESSION["user"]===null){
-        header('Location: http://www.designsbytabitha.ca/session.html');
+        header('Location: ./session.php');
     }
 
 ?>
@@ -13,7 +13,7 @@
 
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="./styles/account.css">
+    <link rel="stylesheet" type="text/css" href="../styles/account.css">
     <style>
         #content {
             display: flex;
@@ -50,65 +50,61 @@
 </head>
 
 <body>
+  <?php
+  
+    // define variables and set to empty values
+    $passwordErr= "";
+    $password = "";
+    $validPassword = "";
 
-    <div class="php-pass-reset">
-        <?php
-        
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-        // define variables and set to empty values
-        $passwordErr= "";
-        $password = "";
-        $validPassword = "";
+      if (empty($_POST["password"])) {
+          $passwordErr = "<br>Password is required<br>";
+      } else {
+          $password = test_input($_POST["password"]);
+          // regex check
+          if (!preg_match("/^[a-zA-Z]{5,}[0-9]{1,}[\W\S]*$/",$password)) {
+              $passwordErr = "At least 1 number and 5 letters<br>";
+          } else { 
+              $validPassword = $password;
+              $validInputs ++;
+          }
+      }
+    
+        if ($validInputs === 1){
+            
+            include "../php/config.php";
 
-        if ($_SERVER["REQUEST_METHOD"] == "POST") {
-
-            if (empty($_POST["password"])) {
-                $passwordErr = "<br>Password is required<br>";
-            } else {
-                $password = test_input($_POST["password"]);
-                // regex check
-                if (!preg_match("/^[a-zA-Z]{5,}[0-9]{1,}[\W\S]*$/",$password)) {
-                    $passwordErr = "At least 1 number and 5 letters<br>";
-                } else { 
-                    $validPassword = $password;
-                    $validInputs ++;
-                }
-            }
-        
-            if ($validInputs === 1){
-                
-                include "config.php";
-
-                $email = $_SESSION["email"];
-                
-                $stmt = $con->prepare("UPDATE users SET Password = ? WHERE Email = ?");
-                $stmt->bind_param( "ss", password_hash($validPassword, PASSWORD_BCRYPT), $email);
-                
-                if ($stmt->execute()) { 
-                    $statusMessage  = "Password Changed!";
-                    header('Location: http://www.designsbytabitha.ca/session.html');
-                    
-                } else {
-                    $statusMessage = $stmt->error;
-                }
+            $email = $_SESSION["email"];
+            
+            $stmt = $con->prepare("UPDATE users SET Password = ? WHERE Email = ?");
+            $stmt->bind_param( "ss", password_hash($validPassword, PASSWORD_BCRYPT), $email);
+            
+            if ($stmt->execute()) { 
+                $statusMessage  = "Password Changed!";
+                header('Location: ./session.php');
                 
             } else {
-                $success = "Please fix the errors and try again";
+                $statusMessage = $stmt->error;
             }
+            
+        } else {
+            $success = "Please fix the errors and try again";
         }
+    }
 
-        function test_input($data) {
-            $data = trim($data);
-            $data = stripslashes($data);
-            $data = htmlspecialchars($data);
-            return $data;
-        }
+    function test_input($data) {
+        $data = trim($data);
+        $data = stripslashes($data);
+        $data = htmlspecialchars($data);
+        return $data;
+    }
 
-        $userName = $password = $email = "";
-        $validUserName = $validPassword = $validEmail = "";
+    $userName = $password = $email = "";
+    $validUserName = $validPassword = $validEmail = "";
 
-        ?>
-    </div>
+  ?>
 
     <div id="content">
         <h2 style="margin-bottom: 0;">Change Password</h2>
@@ -122,7 +118,9 @@
             <span class="error"> * </span>
             <br>
 
-            <span class="error"><?php echo $passwordErr;?></span>
+            <span class="error">
+              <?php echo $passwordErr;?>
+            </span>
 
             <br>
 
@@ -140,7 +138,7 @@
 
         <br><br>
 
-        <a href="https://www.designsbytabitha.ca/session.html" style="width: 100%;">
+        <a href="./session.php" style="width: 100%;">
             <button class="fancyBtn" style="margin-top: 25px">
                 ..Back
             </button>

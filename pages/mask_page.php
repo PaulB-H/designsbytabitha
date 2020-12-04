@@ -1,5 +1,5 @@
 <?php
-    include("./session_start.php")
+  include("../php/session_start.php");
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -22,6 +22,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Masks by Tabitha</title>
+    <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" />
+    <link rel="icon" href="../favicon.ico" type="image/x-icon" />
     <link
       rel="stylesheet"
       href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
@@ -79,7 +81,7 @@
     <div id="account">
       <button
         id="accountBtn"
-        onclick="window.location.href='https://www.designsbytabitha.ca/session.html'"
+        onclick="window.location.href='session.php'"
         style="
           position: fixed;
           right: 0;
@@ -93,11 +95,15 @@
       >
         Account
       </button>
+
       <?php
-            if($_SESSION["user"] != "") {
-                
-            } else {
-                echo "<div style='display: none;'>"; } ?>
+        if($_SESSION["user"] != "") {
+
+        } else {
+          echo "<div style='display: none;'>"; 
+        } 
+      ?>
+
       <button
         id="viewCartBtn"
         onclick="viewCart()"
@@ -256,6 +262,7 @@
         var copy;
         var stockOnDom;
         var lastItem;
+        var maskItemsLoaded = false;
 
         $(document).ready(function () {
           window.onscroll = () => {
@@ -277,37 +284,46 @@
 
           getMasks();
 
-          setTimeout(function () {
-            $(".item-container img").click(function () {
-              copy = $(this).clone();
+          var attachScriptInterval = setInterval(attachScript, 500);
 
-              $("#overlay-container").html(copy);
+          function attachScript(){
+              if (maskItemsLoaded === true){
+              $(".item-container img").click(function () {
+                console.log("Click called")
+                copy = $(this).clone();
 
-              $("#overlay-container div:first-child").removeClass(
-                "item-container"
-              );
-              $("#overlay-container div:first-child").addClass("overlay-item");
+                $("#overlay-container").html(copy);
 
-              $(".overlay-item img:first-child").addClass("overlay-img");
+                $("#overlay-container div:first-child").removeClass(
+                  "item-container"
+                );
+                $("#overlay-container div:first-child").addClass("overlay-item");
 
-              $(".overlay-item div:first-child").removeClass(
-                "detail-container"
-              );
-              $(".overlay-item div:first-child").addClass("overlay-details");
+                $(".overlay-item img:first-child").addClass("overlay-img");
 
-              $("#overlay-container").show();
-              $("#overlay-container").addClass("d-flex");
-              $("body").addClass("overflow-hidden");
-            });
+                $(".overlay-item div:first-child").removeClass(
+                  "detail-container"
+                );
+                $(".overlay-item div:first-child").addClass("overlay-details");
 
-            $("#overlay-container").click(function () {
-              $("#overlay-container").hide();
-              $("#overlay-container").removeClass("d-flex");
-              $("#overlay-container").html("");
-              $("body").removeClass("overflow-hidden");
-            });
-          }, 1000);
-        });
+                $("#overlay-container").show();
+                $("#overlay-container").addClass("d-flex");
+                $("body").addClass("overflow-hidden");
+              });
+
+              $("#overlay-container").click(function () {
+                $("#overlay-container").hide();
+                $("#overlay-container").removeClass("d-flex");
+                $("#overlay-container").html("");
+                $("body").removeClass("overflow-hidden");
+              });
+              console.log("Loaded clearing interval")
+              clearInterval(attachScriptInterval);
+
+            } else {console.log("Not loaded yet")}
+          }
+
+        }); // document.ready end
 
         // Live updating like below not really necessary
         // setInterval(function () {
@@ -321,6 +337,7 @@
             type: "get",
             dataType: "JSON",
             success: function (response) {
+              // _.isEqual() to compare arrays, note underscore
               if (_.isEqual(lastResponse, response)) {
                 console.log("DB Objects same, no update needed");
               } else {
@@ -339,26 +356,26 @@
                           <img loading=lazy class="maskimg"  src="../${imgurl}">
                           <div class="detail-container">
 
-                              <h1> ${fabricname} </h1>
+                            <h1> ${fabricname} </h1>
 
-                              <?php
-                                  if($_SESSION["user"] != "") {
-                                      
-                                  } else {
-                                      echo "<a href='https://www.designsbytabitha.ca/session.html'><p>Login to order!</p></a>";
-                                      echo "<div style='display: none;'>";
-                                  }
-                              ?>
-                              
-                              <button onclick="addToCart('${fabricname}')" style="margin-bottom: 10px; border: none; padding: 5px;">Add to cart</button>
+                            <?php
+                              if($_SESSION["user"] != "") {
+                                  
+                              } else {
+                                echo "<a href='./session.php'><p>Login to order!</p></a>";
+                                echo "<div style='display: none;'>";
+                              }
+                            ?>
+                            
+                            <button onclick="addToCart('${fabricname}')" style="margin-bottom: 10px; border: none; padding: 5px;">Add to cart</button>
 
-                              <?php
-                                  if($_SESSION["user"] != "") {
-                                      
-                                  } else {
-                                      echo "</div>";
-                                  }
-                              ?>
+                            <?php
+                              if($_SESSION["user"] != "") {
+                                  
+                              } else {
+                                echo "</div>";
+                              }
+                            ?>
                               
                           </div>
                       </div>
@@ -366,6 +383,7 @@
                     $("#mask-item-container").append(mask_item);
                   }
                 }
+                maskItemsLoaded = true;
                 lastResponse = response;
               }
             },
@@ -498,22 +516,22 @@
             cartItemDiv.insertAdjacentHTML(
               "beforeend",
               `
-                    <div class="cartItem">
-                        <p style="text-align: center;">Cart Empty!</p>
-                    </div>
-                    `
+              <div class="cartItem">
+                  <p style="text-align: center;">Cart Empty!</p>
+              </div>
+              `
             );
           } else {
             cart.forEach(function (item, index) {
               cartItemDiv.insertAdjacentHTML(
                 "beforeend",
                 `
-                            <div class="cartItem cartItem${index}">
-                                <h3>${item[0]}</h3><button onclick="removeCartItem(${index})">Remove Item</button>
-                                <h4>Size: ${item[1]}</h4>
-                                <h4>Qnty: ${item[2]}</h4>
-                            </div>
-                        `
+                <div class="cartItem cartItem${index}">
+                    <h3>${item[0]}</h3><button onclick="removeCartItem(${index})">Remove Item</button>
+                    <h4>Size: ${item[1]}</h4>
+                    <h4>Qnty: ${item[2]}</h4>
+                </div>
+                `
               );
             });
           }
@@ -539,23 +557,23 @@
                 [
                   "<button>Send</button>",
                   function (instance, toast) {
-                    fetch("./post_create_order.php", {
-                      method: "POST", // or 'PUT'
+                    fetch("../php/post_create_order.php", {
+                      method: "POST",
                       headers: {
                         "Content-Type": "application/json",
                       },
                       body: JSON.stringify(cartArray),
                     })
-                      .then((response) => response.json())
-                      .then((data) => {
-                        // console.log('Success:', data);
-                      })
-                      .then((cart = []))
-                      .then(localStorage.removeItem("cart"))
-                      .then(updateCartDiv())
-                      .catch((error) => {
-                        console.error("Error:", error);
-                      });
+                    .then((response) => response.json())
+                    .then((data) => {
+                      // console.log('Success:', data);
+                    })
+                    .then((cart = []))
+                    .then(localStorage.removeItem("cart"))
+                    .then(updateCartDiv())
+                    .catch((error) => {
+                      console.error("Error:", error);
+                    });
 
                     instance.destroy();
 

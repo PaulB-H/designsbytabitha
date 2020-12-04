@@ -1,16 +1,15 @@
 <?php
 
-    include("./session_start.php");
+  include("../php/session_start.php");
     
 ?>
 
 <!DOCTYPE HTML>
 <html>
-
 <head>
     <title>Check User</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="/styles/account.css">
+    <link rel="stylesheet" type="text/css" href="../styles/account.css">
     <style>
         * {
             margin: 0;
@@ -78,90 +77,89 @@
 <body>
 
     <?php
-        
 
-        // define variables and set to empty values
-        $userNameErr = $passwordErr = $emailErr = "";
-        $userName = $password = $email = "";
-        $validUserName = $validPassword = $validEmail = "";
+      // define variables and set to empty values
+      $userNameErr = $passwordErr = $emailErr = "";
+      $userName = $password = $email = "";
+      $validUserName = $validPassword = $validEmail = "";
 
-        if ($_SERVER["REQUEST_METHOD"] == "POST") {
+      if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-            if (empty($_POST["userName"])) {
-                $userNameErr = "User Name is required";
-            } else {
-                $userName = test_input($_POST["userName"]);
-                // check if name only contains letters and whitespace
-                if (!preg_match("/^[a-zA-Z]*$/",$userName)) {
-                    $userNameErr = "One word, only letters";
-                } else {
-                    $validUserName = $userName;
-                    $myVar ++;
-                }
-            }
-        
-            if (empty($_POST["password"])) {
-                $passwordErr = "Please enter your password";
-            } else {
-                $password = test_input($_POST["password"]);
-                // regex check
-                if (!preg_match("/^[a-zA-Z0-9]{6,}$/",$password)) {
-                //if (!preg_match("/[a-zA-Z]{5,}[0-9]{1,}[\W\S]*/",$password)) {
-                    $passwordErr = "Min 6 characters";
-                } else { 
-                    $validPassword = $password;
-                    $myVar ++;
-                }
-            }
-            
-            
-            if ($myVar === 2){
-                $myVar ++;
-                
-                $success ="Success";
-
-                include "config.php";
-                
-                $stmt = $con -> prepare('SELECT UserName, Password, TempPass, Email FROM users WHERE UserName = ?');
-                $stmt -> bind_param('s', $validUserName); 
-                $stmt -> execute(); 
-                $stmt -> store_result(); 
-                $stmt -> bind_result($name, $pass, $tempPass, $email); 
-                $stmt -> fetch();
-                
-                
-                if (password_verify($validPassword, $pass) || password_verify($validPassword, $tempPass)) {
-                    $success = 'Password is valid!';
-                    $_SESSION["user"] = $name;
-                    $_SESSION["email"] = $email;
-                    $success = "Successfully logged in as " . $_SESSION["user"];
-                    header('Location: https://www.designsbytabitha.ca/sign_in_success.html/');
-                } else {
-                    $success = 'Invalid password.';
-                }
-                
-                // close statement 
-                $stmt->close();
-                
-                $con->close();
-                
-            } else {
-                $success = "Please fix the errors and try again";
-            }
-            
+        if (empty($_POST["userName"])) {
+          $userNameErr = "User Name is required";
+        } else {
+          $userName = test_input($_POST["userName"]);
+          // check if name only contains letters and whitespace
+          if (!preg_match("/^[a-zA-Z]*$/",$userName)) {
+            $userNameErr = "One word, only letters";
+          } else {
+            $validUserName = $userName;
+            $myVar ++;
+          }
         }
-
-        function test_input($data) {
-            $data = trim($data);
-            $data = stripslashes($data);
-            $data = htmlspecialchars($data);
-            return $data;
+    
+        if (empty($_POST["password"])) {
+            $passwordErr = "Please enter your password";
+        } else {
+          $password = test_input($_POST["password"]);
+          // regex check
+          if (!preg_match("/^[a-zA-Z0-9]{6,}$/",$password)) {
+          //if (!preg_match("/[a-zA-Z]{5,}[0-9]{1,}[\W\S]*/",$password)) {
+            $passwordErr = "Min 6 characters";
+          } else { 
+            $validPassword = $password;
+            $myVar ++;
+          }
         }
+        
+        
+        if ($myVar === 2){
+          $myVar ++;
+          
+          $success ="Success";
 
-        $userName = $password = $email = "";
-        $validUserName = $validPassword = $validEmail = "";
+          include "../php/config.php";
+          
+          $stmt = $con -> prepare('SELECT UserName, Password, TempPass, Email FROM users WHERE UserName = ?');
+          $stmt -> bind_param('s', $validUserName); 
+          $stmt -> execute(); 
+          $stmt -> store_result(); 
+          $stmt -> bind_result($name, $pass, $tempPass, $email); 
+          $stmt -> fetch();
+          
+          
+          if (password_verify($validPassword, $pass) || password_verify($validPassword, $tempPass)) {
+            $success = 'Password is valid!';
+            $_SESSION["user"] = $name;
+            $_SESSION["email"] = $email;
+            $success = "Successfully logged in as " . $_SESSION["user"];
+            header('Location: ./sign_in_success.php');
+          } else {
+            $success = 'Invalid password.';
+          }
+          
+          // close statement 
+          $stmt->close();
+          
+          $con->close();
+            
+        } else {
+          $success = "Please fix the errors and try again";
+        }
+          
+      }
 
-        ?>
+      function test_input($data) {
+          $data = trim($data);
+          $data = stripslashes($data);
+          $data = htmlspecialchars($data);
+          return $data;
+      }
+
+      $userName = $password = $email = "";
+      $validUserName = $validPassword = $validEmail = "";
+
+    ?>
 
     <div id="content">
         <h1>Designs by Tabitha</h1>
@@ -192,7 +190,7 @@
 
         <h3 class="highlight"><?php echo $success; ?></h3>
 
-        <a href="https://www.designsbytabitha.ca/session.html">
+        <a href="./session.php">
             <button class="button fancyBtn" style="font-size: 125%;">
                 ..Back
             </button>

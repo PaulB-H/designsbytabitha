@@ -1,5 +1,5 @@
 <?php
-    include("./session_start.php");
+    include("../php/session_start.php");
 ?>
 
 <!DOCTYPE HTML>
@@ -7,7 +7,7 @@
 
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="/styles/account.css">
+    <link rel="stylesheet" type="text/css" href="../styles/account.css">
     <style>
         .error {
             color: #FF0000;
@@ -34,7 +34,7 @@
     <div id="container">
         <div style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
             <h1>Welcome <b><i><?php echo $_SESSION["user"]; ?></i></b></h1>
-            <button class="fancyBtn" onclick="location.href = 'https://www.designsbytabitha.ca/session.html'">
+            <button class="fancyBtn" onclick="location.href = './session.php'">
                 Back
             </button>
         </div>
