@@ -1,5 +1,5 @@
 <?php
-    include("../php/session_start.php")
+  include("../php/session_start.php")
 ?>
 
 <!DOCTYPE HTML>
@@ -110,14 +110,15 @@
         $myVar ++;
         
         include "../php/config_ordersDB.php";
-        $userStr = "user";
+        $roles = "user";
         $stmt = $con->prepare("INSERT INTO users (UserName, Password, Email, Roles) VALUES (?, ?, ?, ?)");
-        $stmt->bind_param( "ssss", $validUserName , password_hash($validPassword, PASSWORD_BCRYPT), $validEmail, $userStr);
+        $stmt->bind_param( "ssss", $validUserName , password_hash($validPassword, PASSWORD_BCRYPT), $validEmail, $roles);
         
         if ($stmt->execute()) { 
           $success = "User Registered Successfully";
           $_SESSION["user"] = $validUserName;
           $_SESSION["email"] = $validEmail;
+          $_SESSION["roles"] = $roles;
           header('Location: ./sign_up_success.php');
         } else {
           $success = $stmt->error;

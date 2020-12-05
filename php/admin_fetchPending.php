@@ -7,11 +7,10 @@
       echo(JSON_encode("No Access"));
     } else {
       include("./config_ordersDB.php");
-      
+
       $return_arr = array();
-      $email = $_SESSION["email"];
       
-      $query = "SELECT * FROM orders";
+      $query = "SELECT * FROM orders WHERE OrderStatus = 'Pending' ";
       $result = mysqli_query($con,$query);
 
       while($row = mysqli_fetch_array($result)){

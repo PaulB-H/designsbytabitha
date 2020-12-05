@@ -34,7 +34,7 @@
 
       async function fetchAndDisplayOrders() {
         return new Promise((resolve) => {
-          fetch("../php/admin.php", {
+          fetch("../php/admin_fetchAll.php", {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
@@ -47,7 +47,8 @@
                 "afterbegin",
                 `
                 <h3>All Active Orders</h3>
-              `
+                <hr>
+                `
               );
               data.forEach(function (value, index) {
                 orderlist.insertAdjacentHTML(
@@ -59,7 +60,7 @@
                   <p>Status: ${value.orderStatus} <button>Update Status</button></p>
                   <button>Delete Order</button>
                   <hr>
-                `
+                  `
                 );
               });
               resolve(data);
@@ -79,7 +80,7 @@
 
       function fetchAndDisplayPending() {
         return new Promise((resolve) => {
-          fetch("../php/get_pending.php", {
+          fetch("../php/admin_fetchPending.php", {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
@@ -92,6 +93,7 @@
                 "afterbegin",
                 `
                   <h3>Pending Orders</h3>
+                  <hr>
                 `
               );
               data.forEach(function (value, index) {

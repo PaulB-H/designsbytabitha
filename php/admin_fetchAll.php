@@ -4,15 +4,13 @@
   
   if ($_SERVER["REQUEST_METHOD"] == "GET") {
     if($_SESSION["roles"] !== "admin"){
-      echo(JSON_encode("Nuh-uh"));
+      echo(JSON_encode("No Access"));
     } else {
-
       include("./config_ordersDB.php");
-
-      $return_arr = array();
-      $email = $_SESSION["email"];
       
-      $query = "SELECT * FROM orders WHERE OrderStatus = 'Pending' ";
+      $return_arr = array();
+      
+      $query = "SELECT * FROM orders";
       $result = mysqli_query($con,$query);
 
       while($row = mysqli_fetch_array($result)){
