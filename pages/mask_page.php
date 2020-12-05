@@ -44,28 +44,8 @@
   </head>
 
   <body>
-    <div
-      id="cartDiv"
-      class="d-none"
-      style="
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        top: 0;
-        left: 0;
-        z-index: 100000;
-      "
-    >
-      <div
-        style="
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
-          padding-top: 25px;
-          padding-bottom: 25px;
-        "
-      >
+    <div id="cartDiv" class="d-none">
+      <div id="cartBtns">
         <button onclick="closeCart()" style="margin-bottom: 10px">
           Close Cart
         </button>
@@ -82,16 +62,6 @@
       <button
         id="accountBtn"
         onclick="window.location.href='session.php'"
-        style="
-          position: fixed;
-          right: 0;
-          z-index: 998;
-          top: 0;
-          border: none;
-          padding: 10px;
-          margin-top: 10px;
-          border-radius: 20px 0 0 20px;
-        "
       >
         Account
       </button>
@@ -107,16 +77,6 @@
       <button
         id="viewCartBtn"
         onclick="viewCart()"
-        style="
-          position: fixed;
-          right: 0;
-          z-index: 998;
-          top: 0;
-          border: none;
-          padding: 10px;
-          margin-top: 60px;
-          border-radius: 20px 0 0 20px;
-        "
       >
         View Cart
       </button>
@@ -136,30 +96,30 @@
     	max-width: 500px;
 	margin: auto;
     ">
-        <li>Machine Washable, Tumble Dry on low setting</li>
-        <li>Made to Order</li>
-        <li>3 Layers of Protection</li>
-        <li>2 layers of 100% premium cotton - Main Fashion Fabric (outward layer) Lining solid Fabric (inner
-        layer)</li>
-        <li>3rd layer of non-woven moisture resistant fabric (interlining, sits between main fabric and lining fabric</li>
-        <li>Non-woven bonded fabric is breathable and provides an extra barrier of protection
-        <li>When a mask is worn for a lengthy time moisture can build up which can then harbour bacteria.</li>
-        <li>This third layer of fabric keeps moisture from reaching the outside main fabric.</li> 
-        • Contains a filter pocket for added protection
-        • Nose guard with wire for a better fit - helps prevent glasses from fogging
-        • Colour Coordinated thin elastic ear straps for optimal comfort
-        <li>Logo’s Logos, names, and images can be added using Infusible Ink can be added for an additional fee</li> 
-        Price:
-        $15 for a 2 layer mask
-        $20 for the 3 layer mask
-        Sizing:
-        Average: fits most women and teenagers
-        Large: fits most men
-        Youth 7 - 12 yrs
-        Child 3 - 6 yrs
-        Customized sizing available upon request
-        Add-ons:
-        • Customized logos
+      <li>Machine Washable, Tumble Dry on low setting</li>
+      <li>Made to Order</li>
+      <li>3 Layers of Protection</li>
+      <li>2 layers of 100% premium cotton - Main Fashion Fabric (outward layer) Lining solid Fabric (inner
+      layer)</li>
+      <li>3rd layer of non-woven moisture resistant fabric (interlining, sits between main fabric and lining fabric</li>
+      <li>Non-woven bonded fabric is breathable and provides an extra barrier of protection
+      <li>When a mask is worn for a lengthy time moisture can build up which can then harbour bacteria.</li>
+      <li>This third layer of fabric keeps moisture from reaching the outside main fabric.</li> 
+      • Contains a filter pocket for added protection
+      • Nose guard with wire for a better fit - helps prevent glasses from fogging
+      • Colour Coordinated thin elastic ear straps for optimal comfort
+      <li>Logo’s Logos, names, and images can be added using Infusible Ink can be added for an additional fee</li> 
+      Price:
+      $15 for a 2 layer mask
+      $20 for the 3 layer mask
+      Sizing:
+      Average: fits most women and teenagers
+      Large: fits most men
+      Youth 7 - 12 yrs
+      Child 3 - 6 yrs
+      Customized sizing available upon request
+      Add-ons:
+      • Customized logos
     </ul> 
     -->
 
@@ -177,18 +137,7 @@
         <p>All other sizes or out-of-stock items available made to order</p>
     </div> -->
 
-    <div
-      class="fade-in-container"
-      style="
-        z-index: 20000;
-        width: 100vw;
-        height: 100vh;
-        position: absolute;
-        background: white;
-        text-align: center;
-        display: none;
-      "
-    >
+    <div class="fade-in-container">
       <h1>LOADING...</h1>
     </div>
 
@@ -287,9 +236,8 @@
           var attachScriptInterval = setInterval(attachScript, 500);
 
           function attachScript(){
-              if (maskItemsLoaded === true){
+            if (maskItemsLoaded === true){
               $(".item-container img").click(function () {
-                console.log("Click called")
                 copy = $(this).clone();
 
                 $("#overlay-container").html(copy);
@@ -317,32 +265,31 @@
                 $("#overlay-container").html("");
                 $("body").removeClass("overflow-hidden");
               });
-              console.log("Loaded clearing interval")
+
               clearInterval(attachScriptInterval);
 
-            } else {console.log("Not loaded yet")}
+            }
           }
 
         }); // document.ready end
 
-        // Live updating like below not really necessary
+        // Check for updates interval
         // setInterval(function () {
         //     getMasks();
         // }, 5000);
 
         function getMasks() {
-          console.log("getMasks() called")
           $.ajax({
             url: "../php/get_masks.php",
             type: "get",
             dataType: "JSON",
             success: function (response) {
-              // _.isEqual() to compare arrays, note underscore
+              // _.isEqual() to compare arrays 
+              // note underscore from lodash
               if (_.isEqual(lastResponse, response)) {
                 console.log("DB Objects same, no update needed");
               } else {
                 // console.log("DB Objects different");
-                console.log(response)
                 let len = response.length;
                 var i;
                 for (i = 0; i < len; i++) {
@@ -388,7 +335,7 @@
               }
             },
             error: function (XMLHttpRequest, textStatus, errorThrown) {
-              alert("Down for Maintenance");
+              alert(`XMLHttpRequest err: ${errThrown}`);
             },
           });
         } // END GETMASKS FUNCTION

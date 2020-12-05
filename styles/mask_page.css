@@ -4,10 +4,57 @@
   scrollbar-width: thin;
 }
 
+#accountBtn {
+  position: fixed;
+  right: 0;
+  z-index: 998;
+  top: 0;
+  border: none;
+  padding: 10px;
+  margin-top: 10px;
+  border-radius: 20px 0 0 20px;
+}
+
+#viewCartBtn {
+  position: fixed;
+  right: 0;
+  z-index: 998;
+  top: 0;
+  border: none;
+  padding: 10px;
+  margin-top: 60px;
+  border-radius: 20px 0 0 20px;
+}
+
+.fade-in-container {
+  z-index: 20000;
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+  background: white;
+  text-align: center;
+  display: none;
+}
+
 #cartDiv {
   background-image: url(./images/vector/header.svg);
   overflow: scroll;
   background-size: cover;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index: 100000;
+}
+
+#cartBtns {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding-top: 25px;
+  padding-bottom: 25px;
 }
 
 #cartDiv button {
