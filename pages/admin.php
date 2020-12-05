@@ -20,7 +20,7 @@
     <button onclick="location='./session.php'">Back</button>
     <button onclick="fetchAndDisplayOrders()">All</button>
     <button onclick="fetchAndDisplayPending()">Pending</button>
-    <button>In Prog</button>
+    <button onclick="fetchAndDisplayWIP()">WIP</button>
     <button>Completed</button>
     <button>Canceled</button>
     <br /><br />
@@ -109,6 +109,49 @@
                     <p>Status: ${value.orderStatus} <button>Update Status</button></p>
                     <button>Delete Order</button>
                     <hr>
+                  `
+                );
+              });
+              resolve(data);
+            })
+            .catch((error) => {
+              console.error("Error:", error);
+            });
+        });
+      }
+
+      async function fetchAndDisplayWIP() {
+        return new Promise((resolve) => {
+          fetch("../php/admin_fetchWIP.php", {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              orderlist.innerHTML = "";
+              orderlist.insertAdjacentHTML(
+                "afterbegin",
+                `
+                <h3>WIP Orders</h3>
+                <hr>
+                `
+              );
+              data.forEach(function (value, index) {
+                orderlist.insertAdjacentHTML(
+                  "beforeend",
+                  `
+                  <p>Date: ${value.Date}</p>
+                  <p>${value.Email}</p>
+                  <p>Order # ${value.orderNum}</p>
+                  <p>Status: ${value.orderStatus} 
+                    <button onclick="updateStatus([${value.orderNum}, 'WIP'])">Status - WIP</button>
+                    <button onclick="updateStatus([${value.orderNum}, 'Pending'])">Status - Pending</button>
+                    <button onclick="updateStatus([${value.orderNum}, 'Canceled'])">Status - Canceled</button>
+                  </p>
+                  <button>Delete Order</button>
+                  <hr>
                   `
                 );
               });
