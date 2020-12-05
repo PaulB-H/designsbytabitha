@@ -26,6 +26,23 @@
   border-radius: 20px 0 0 20px;
 }
 
+.qntyIncrease {
+  border-radius: 10px;
+  border: 1px solid black;
+  float: right;
+  padding: 3px;
+  margin-left: 3px;
+  cursor: pointer;
+}
+
+.qntyDecrease {
+  border-radius: 10px;
+  border: 1px solid black;
+  float: right;
+  padding: 3px;
+  cursor: pointer;
+}
+
 .fade-in-container {
   z-index: 20000;
   width: 100vw;
@@ -37,7 +54,7 @@
 }
 
 #cartDiv {
-  background-image: url(./images/vector/header.svg);
+  background-image: url(../images/vector/header.svg);
   overflow: scroll;
   background-size: cover;
   position: absolute;
@@ -46,7 +63,7 @@
   top: 0;
   left: 0;
   z-index: 100000;
-  background: rgba(0, 0, 0, 0.9);
+  /* background: rgba(0, 0, 0, 0.9); */
 }
 
 #cartBtns {

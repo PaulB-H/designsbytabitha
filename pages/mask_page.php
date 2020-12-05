@@ -80,11 +80,15 @@
       >
         View Cart
       </button>
+
       <?php
         if($_SESSION["user"] != "") {
             
         } else {
-            echo "</div>"; } ?>
+          echo "</div>"; 
+        } 
+      ?>
+      
     </div>
 
     <h1 class="main-header">Face Masks</h1>
@@ -134,7 +138,7 @@
     </div>
 
     <!-- <div class="made-2-order-msg">
-        <p>All other sizes or out-of-stock items available made to order</p>
+      <p>All other sizes or out-of-stock items available made to order</p>
     </div> -->
 
     <div class="fade-in-container">
@@ -476,7 +480,27 @@
                 <div class="cartItem cartItem${index}">
                     <h3>${item[0]}</h3><button onclick="removeCartItem(${index})">Remove Item</button>
                     <h4>Size: ${item[1]}</h4>
-                    <h4>Qnty: ${item[2]}</h4>
+                    <h4>Qnty: ${item[2]}
+                      <span 
+                        class="qntyIncrease"
+                        onclick="function increaseItem${index}(){
+                          cart[${index}][2] ++;
+                          updateCartDiv();
+                          localStorage.setItem('cart', JSON.stringify(cart));
+                        }; increaseItem${index}()"
+                      > 
+                        +1 
+                      </span>
+
+                      <span 
+                        class="qntyDecrease"
+                        onclick="function decreaseItem${index}(){
+                          console.log('Decrease Item')
+                        }; decreaseItem${index}()"
+                      > 
+                        - 1
+                      </span>
+                    </h4>
                 </div>
                 `
               );
