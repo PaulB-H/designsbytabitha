@@ -57,7 +57,11 @@
                   <p>Date: ${value.Date}</p>
                   <p>${value.Email}</p>
                   <p>Order # ${value.orderNum}</p>
-                  <p>Status: ${value.orderStatus} <button>Update Status</button></p>
+                  <p>Status: ${value.orderStatus} 
+                    <button onclick="updateStatus([${value.orderNum}, 'WIP'])">Status - WIP</button>
+                    <button onclick="updateStatus([${value.orderNum}, 'Pending'])">Status - Pending</button>
+                    <button onclick="updateStatus([${value.orderNum}, 'Canceled'])">Status - Canceled</button>
+                  </p>
                   <button>Delete Order</button>
                   <hr>
                   `
@@ -70,7 +74,6 @@
             });
         });
       }
-
       fetchAndDisplayOrders();
 
       function searchOrderOrEmail() {
@@ -117,16 +120,14 @@
         });
       }
 
-      // let updateArr = [orderNum, status];
-      let updateArr = [52, "Hello World"];
-
+      // orderNumSt = one array, two items [orderNum, status];
       function updateStatus(orderNumSt) {
-        fetch("../php/update_status.php", {
+        fetch("../php/admin_updateStatus.php", {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(updateArr),
+          body: JSON.stringify(orderNumSt),
         })
           .then((response) => response.json())
           .then((data) => {
@@ -135,6 +136,7 @@
           .catch((error) => {
             console.error("Error:", error);
           });
+        fetchAndDisplayOrders();
       }
     </script>
   </body>
