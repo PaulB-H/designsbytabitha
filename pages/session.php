@@ -1,5 +1,5 @@
 <?php
-    include("../php/session_start.php");
+  include("../php/session_start.php");
 ?>
 
 <!DOCTYPE html>
@@ -104,13 +104,13 @@
         </button>
 
         <?php
-          if($_SESSION["user"]!=null){
+          if( $_SESSION["user"] != null ){
             echo '</div>'; 
           } 
         ?>
 
         <?php
-          if($_SESSION["user"]===null){
+          if( $_SESSION["user"] === null ){
             echo '<div style="display: none;">'; 
           } 
         ?>
@@ -132,7 +132,7 @@
         <button onclick="window.location.href='./mask_page.php'">Shop</button>
 
         <?php
-          if($_SESSION["user"] !== "Paulus" && $_SESSION["user"] !== "Tabgbernard"){
+          if($_SESSION["roles"] !== "admin"){
             echo '<div style="display: none">'; } ?>
 
         <button
@@ -142,11 +142,11 @@
         </button>
 
         <?php
-          if($_SESSION["user"] !== "Paulus" && $_SESSION["user"] !== "Tabgbernard"){
+          if($_SESSION["roles"] !== "admin"){
             echo '</div>'; } ?>
 
         <?php
-          if($_SESSION["user"]===null){
+          if($_SESSION["user"] === null){
             echo '</div>'; 
           } 
         ?>
@@ -182,18 +182,6 @@
           }
         };
         xhttp.open("GET", "../php/session_destroy.php", true);
-        xhttp.withCredentials = true;
-        xhttp.send();
-      }
-
-      function samplePhp() {
-        var xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = function () {
-          if (this.readyState == 4 && this.status == 200) {
-            console.log(this.responseText);
-          }
-        };
-        xhttp.open("GET", "sample.php", true);
         xhttp.withCredentials = true;
         xhttp.send();
       }

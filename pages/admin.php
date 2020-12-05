@@ -2,8 +2,8 @@
 
   include("../php/session_start.php");
 		
-  if($_SESSION["user"] !== "Paulus" && $_SESSION["user"] !== "Tabgbernard"){
-      header('Location: https://designsbytabitha.ca/');
+  if($_SESSION["roles"] !== "admin"){
+    header('Location: ./mask_page.php');
   }
 
 ?>
@@ -91,20 +91,20 @@
               orderlist.insertAdjacentHTML(
                 "afterbegin",
                 `
-                <h3>Pending Orders</h3>
-              `
+                  <h3>Pending Orders</h3>
+                `
               );
               data.forEach(function (value, index) {
                 orderlist.insertAdjacentHTML(
                   "beforeend",
                   `
-                  <p>Date: ${value.Date}</p>
-                  <p>${value.Email}</p>
-                  <p>Order # ${value.orderNum}</p>
-                  <p>Status: ${value.orderStatus} <button>Update Status</button></p>
-                  <button>Delete Order</button>
-                  <hr>
-                `
+                    <p>Date: ${value.Date}</p>
+                    <p>${value.Email}</p>
+                    <p>Order # ${value.orderNum}</p>
+                    <p>Status: ${value.orderStatus} <button>Update Status</button></p>
+                    <button>Delete Order</button>
+                    <hr>
+                  `
                 );
               });
               resolve(data);
