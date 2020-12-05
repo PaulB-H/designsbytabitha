@@ -22,7 +22,7 @@
     <button onclick="fetchAndDisplayPending()">Pending</button>
     <button onclick="fetchAndDisplayWIP()">WIP</button>
     <button>Completed</button>
-    <button>Canceled</button>
+    <button onclick="fetchAndDisplayCanceled()">Canceled</button>
     <br /><br />
     Order # or Email <input type="text" name="" id="orderOrEmail" />
     <button onclick="searchOrderOrEmail()">Search</button>
@@ -135,6 +135,49 @@
                 "afterbegin",
                 `
                 <h3>WIP Orders</h3>
+                <hr>
+                `
+              );
+              data.forEach(function (value, index) {
+                orderlist.insertAdjacentHTML(
+                  "beforeend",
+                  `
+                  <p>Date: ${value.Date}</p>
+                  <p>${value.Email}</p>
+                  <p>Order # ${value.orderNum}</p>
+                  <p>Status: ${value.orderStatus} 
+                    <button onclick="updateStatus([${value.orderNum}, 'WIP'])">Status - WIP</button>
+                    <button onclick="updateStatus([${value.orderNum}, 'Pending'])">Status - Pending</button>
+                    <button onclick="updateStatus([${value.orderNum}, 'Canceled'])">Status - Canceled</button>
+                  </p>
+                  <button>Delete Order</button>
+                  <hr>
+                  `
+                );
+              });
+              resolve(data);
+            })
+            .catch((error) => {
+              console.error("Error:", error);
+            });
+        });
+      }
+
+      async function fetchAndDisplayCanceled() {
+        return new Promise((resolve) => {
+          fetch("../php/admin_fetchCanceled.php", {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              orderlist.innerHTML = "";
+              orderlist.insertAdjacentHTML(
+                "afterbegin",
+                `
+                <h3>Canceled Orders</h3>
                 <hr>
                 `
               );
