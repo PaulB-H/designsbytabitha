@@ -495,7 +495,11 @@
                       <span 
                         class="qntyDecrease"
                         onclick="function decreaseItem${index}(){
-                          console.log('Decrease Item')
+                          if(cart[${index}][2] > 1){
+                            cart[${index}][2] --;
+                            updateCartDiv();
+                            localStorage.setItem('cart', JSON.stringify(cart));
+                          }
                         }; decreaseItem${index}()"
                       > 
                         - 1
