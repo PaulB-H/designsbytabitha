@@ -2,10 +2,9 @@
 
 include ("./session_start.php");
 
-if($_SESSION["user"]===null){
+if(!$_SESSION["user"]){
   echo JSON_encode("You must be logged in for this route");
-}
-else if ($_SERVER["REQUEST_METHOD"] == "POST") {
+} else if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
   $json = file_get_contents('php://input');
   $data = json_decode($json);

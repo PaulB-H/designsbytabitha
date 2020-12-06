@@ -2,23 +2,21 @@
 
 include ("./session_start.php");
 
-if($_SESSION["user"]===null){
-    echo JSON_encode("You must be logged in to checkout");
-}
-else if ($_SERVER["REQUEST_METHOD"] == "POST") {
-
-  // INCOMING DATA - JS Array of Arrays
-  // [["FabricName", "Size", quantityInt], ["FabricName", "Size", quantityInt]];
+if(!$_SESSION["user"]){
+  echo JSON_encode("You must be logged in to view your orders");
+} else if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
   $json = file_get_contents('php://input');
   $data = json_decode($json);
 
   include ("./config_ordersDB.php");
 
+  $email = $_SESSION["email"];
+
   $return_arr = array();
   $orderNum = $data;
   
-  $query = "SELECT * FROM order_items WHERE OrderNum = '$orderNum' ";
+  $query = " SELECT * FROM `order_items` WHERE OrderNum = '$orderNum' AND Email = '$email' " ;
   $result = mysqli_query($con,$query);
 
   while($row = mysqli_fetch_array($result)){

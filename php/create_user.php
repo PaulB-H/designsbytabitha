@@ -1,28 +1,33 @@
 <?php
 
-include "./config.php";
+if ($_SESSION["roles"] !== "admin") {
+  echo(JSON_encode("No Access"));
+} else {
 
-$return_arr = array();
+  include "./config.php";
 
-$query = "SELECT * FROM users";
+  $return_arr = array();
 
-$result = mysqli_query($con, $query);
+  $query = "SELECT * FROM users";
 
-while($row = mysqli_fetch_array($result)){
-  $UserNum = $row['UserNum'];
-  $UserName = $row['UserName'];
-  $Password = $row['Password'];
-  $Email = $row['Email'];
+  $result = mysqli_query($con, $query);
 
-  $return_arr[] = array(
-    "UserNum" => $UserNum,
-    "UserName" => $UserName,
-    "Password" => $Password,
-    "Email" => $Email,
-  );
+  while($row = mysqli_fetch_array($result)){
+    $UserNum = $row['UserNum'];
+    $UserName = $row['UserName'];
+    $Password = $row['Password'];
+    $Email = $row['Email'];
+
+    $return_arr[] = array(
+      "UserNum" => $UserNum,
+      "UserName" => $UserName,
+      "Password" => $Password,
+      "Email" => $Email,
+    );
+  }
+
+  // Encoding array in JSON format
+  echo json_encode($return_arr);
 }
-
-// Encoding array in JSON format
-echo json_encode($return_arr);
 
 ?>
