@@ -31,8 +31,10 @@
 
     <script>
       const orderlist = document.getElementById("orderlist");
+      let lastFilter = "all";
 
       async function fetchAndDisplayOrders() {
+        orderlist.innerHTML = "";
         return new Promise((resolve) => {
           fetch("../php/admin_fetchAll.php", {
             method: "GET",
@@ -46,7 +48,7 @@
               orderlist.insertAdjacentHTML(
                 "afterbegin",
                 `
-                <h3>All Active Orders</h3>
+                <h3>All Orders</h3>
                 <hr>
                 `
               );
@@ -67,6 +69,7 @@
                   `
                 );
               });
+              lastFilter = "all";
               resolve(data);
             })
             .catch((error) => {
@@ -81,7 +84,8 @@
         alert(`You would have searched for "${query}"`);
       }
 
-      function fetchAndDisplayPending() {
+      async function fetchAndDisplayPending() {
+        orderlist.innerHTML = "";
         return new Promise((resolve) => {
           fetch("../php/admin_fetchPending.php", {
             method: "GET",
@@ -106,12 +110,17 @@
                     <p>Date: ${value.Date}</p>
                     <p>${value.Email}</p>
                     <p>Order # ${value.orderNum}</p>
-                    <p>Status: ${value.orderStatus} <button>Update Status</button></p>
+                    <p>Status: ${value.orderStatus} 
+                      <button onclick="updateStatus([${value.orderNum}, 'WIP'])">Status - WIP</button>
+                      <button onclick="updateStatus([${value.orderNum}, 'Pending'])">Status - Pending</button>
+                      <button onclick="updateStatus([${value.orderNum}, 'Canceled'])">Status - Canceled</button>
+                    </p>
                     <button>Delete Order</button>
                     <hr>
                   `
                 );
               });
+              lastFilter = "pending";
               resolve(data);
             })
             .catch((error) => {
@@ -121,6 +130,7 @@
       }
 
       async function fetchAndDisplayWIP() {
+        orderlist.innerHTML = "";
         return new Promise((resolve) => {
           fetch("../php/admin_fetchWIP.php", {
             method: "GET",
@@ -155,6 +165,7 @@
                   `
                 );
               });
+              lastFilter = "wip";
               resolve(data);
             })
             .catch((error) => {
@@ -164,6 +175,7 @@
       }
 
       async function fetchAndDisplayCanceled() {
+        orderlist.innerHTML = "";
         return new Promise((resolve) => {
           fetch("../php/admin_fetchCanceled.php", {
             method: "GET",
@@ -198,6 +210,7 @@
                   `
                 );
               });
+              lastFilter = "canceled";
               resolve(data);
             })
             .catch((error) => {
@@ -208,6 +221,7 @@
 
       // orderNumSt = one array, two items [orderNum, status];
       function updateStatus(orderNumSt) {
+        orderlist.innerHTML = "";
         fetch("../php/admin_updateStatus.php", {
           method: "PUT",
           headers: {
@@ -217,13 +231,26 @@
         })
           .then((response) => response.json())
           .then((data) => {
-            console.log("Success:", data);
+            // console.log("Success:", data);
+            refreshLastFilter(lastFilter);
           })
           .catch((error) => {
             console.error("Error:", error);
           });
-        fetchAndDisplayOrders();
       }
+
+      function refreshLastFilter(lastFilter){
+        if (lastFilter === "all") {
+          fetchAndDisplayOrders();
+        } else if (lastFilter === "pending") {
+          fetchAndDisplayPending();
+        } else if (lastFilter === "wip") {
+          fetchAndDisplayWIP();
+        } else if (lastFilter === "canceled") {
+          fetchAndDisplayCanceled();
+        }
+      }
+
     </script>
   </body>
 </html>
