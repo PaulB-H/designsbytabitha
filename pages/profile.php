@@ -74,7 +74,7 @@
       </p>
 
       <br />
-      <a href="https://www.designsbytabitha.ca/update_email.html">
+      <a href="#"> <!-- ./update_email.html -->
         <button class="fancyBtn"><strike>Change Email</strike></button>
       </a>
 

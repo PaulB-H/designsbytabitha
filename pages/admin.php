@@ -13,16 +13,17 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>DBT Admin</title>
+    <link rel="stylesheet" href="../styles/admin.css">
   </head>
   <body>
     <h3>Admin Page</h3>
-    <button onclick="location='./session.php'">Back</button>
+    <button onclick="location = './session.php' ">Back</button>
     <button onclick="fetchAndDisplayOrders('all')">All</button>
     <button onclick="fetchAndDisplayOrders('pending')">Pending</button>
     <button onclick="fetchAndDisplayOrders('wip')">WIP</button>
-    <button onclick="fetchAndDisplayOrders('complete')">Complete</button>
     <button onclick="fetchAndDisplayOrders('canceled')">Canceled</button>
+    <button onclick="fetchAndDisplayOrders('complete')">Complete</button>
     <br /><br />
     Order # or Email <input type="text" name="" id="orderOrEmail" />
     <button onclick="searchOrderOrEmail()">Search</button>
@@ -75,13 +76,14 @@
                   <p>Date: ${value.Date}</p>
                   <p>${value.Email}</p>
                   <p>Order # ${value.orderNum}</p>
-                  <p>Status: ${value.orderStatus} 
-                    <button onclick="updateStatus([${value.orderNum}, 'WIP'])">Status - WIP</button>
-                    <button onclick="updateStatus([${value.orderNum}, 'Pending'])">Status - Pending</button>
-                    <button onclick="updateStatus([${value.orderNum}, 'Canceled'])">Status - Canceled</button>
-                    <button onclick="updateStatus([${value.orderNum}, 'Complete'])">Status - Complete</button>
+                  <p>Status: <strong style="background: yellow; padding: 3px;">${value.orderStatus}</strong>
+                    <br><br>
+                    <button onclick="updateStatus([${value.orderNum}, 'Pending'])">Set <br> Pending</button>
+                    <button onclick="updateStatus([${value.orderNum}, 'WIP'])">Set <br> WIP</button>
+                    <button onclick="updateStatus([${value.orderNum}, 'Canceled'])">Set <br> Canceled</button>
+                    <button onclick="updateStatus([${value.orderNum}, 'Complete'])">Set <br> Complete</button>
                   </p>
-                  <button>Delete Order</button>
+                  <button style="background: red; color: white;">Delete Order</button>
                   <hr>
                   `
                 );
