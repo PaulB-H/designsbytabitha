@@ -21,7 +21,7 @@
     <button onclick="fetchAndDisplayOrders('all')">All</button>
     <button onclick="fetchAndDisplayOrders('pending')">Pending</button>
     <button onclick="fetchAndDisplayOrders('wip')">WIP</button>
-    <button onclick="fetchAndDisplayOrders('complete')">Completed</button>
+    <button onclick="fetchAndDisplayOrders('complete')">Complete</button>
     <button onclick="fetchAndDisplayOrders('canceled')">Canceled</button>
     <br /><br />
     Order # or Email <input type="text" name="" id="orderOrEmail" />
@@ -37,6 +37,7 @@
         orderlist.innerHTML = "";
         lastFilter = filter;
         console.log(lastFilter)
+        let url;
 
         if (filter === "all") {
           url = "fetchAll";
@@ -44,8 +45,8 @@
           url = "fetchPending";
         } else if (filter === "wip") {
           url = "fetchWIP";
-        } else if (filter === "completed") {
-          url = "fetchCompleted";
+        } else if (filter === "complete") {
+          url = "fetchComplete";
         } else if (filter === "canceled") {
           url = "fetchCanceled";
         }
