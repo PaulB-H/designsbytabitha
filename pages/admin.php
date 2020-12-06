@@ -33,11 +33,13 @@
     <script>
       const orderlist = document.getElementById("orderlist");
       let lastFilter = "all";
+      let singleOrder = false;
+      let lastOrder;
 
       async function fetchAndDisplayOrders(filter) {
         orderlist.innerHTML = "";
         lastFilter = filter;
-        console.log(lastFilter)
+        singleOrder = false;
         let url;
 
         if (filter === "all") {
@@ -76,6 +78,8 @@
                   <p>Date: ${value.Date}</p>
                   <p>${value.Email}</p>
                   <p>Order # ${value.orderNum}</p>
+                  <button onclick="fetchAndDisplaySingle(${value.orderNum})">View Details</button>
+                  <br><br>
                   <p>Status: <strong style="background: yellow; padding: 3px;">${value.orderStatus}</strong>
                     <br><br>
                     <button onclick="updateStatus([${value.orderNum}, 'Pending'])">Set <br> Pending</button>
@@ -97,6 +101,54 @@
       }
       fetchAndDisplayOrders("all");
 
+      function fetchAndDisplaySingle(ordernum){
+        orderlist.innerHTML = "";
+        singleOrder = true;
+        lastOrder = ordernum;
+        fetch(`../php/admin_fetchDetails.php`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(ordernum),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            orderlist.innerHTML = "";
+            let details = data.shift();
+            orderlist.insertAdjacentHTML(
+              "afterbegin",
+              `
+              <h3>Order # ${details.orderNum} Details</h3>
+              <h3 style="background: yellow;">Status: ${details.orderStatus}</h3>
+              <h3>Date: ${details.Date}</h3>
+              <h3>Email: ${details.Email}</h3>
+              <hr>
+              `
+            );
+            data.forEach(function (value, index) {
+              orderlist.insertAdjacentHTML(
+                "beforeend",
+                `
+                <p>Fabric: ${value.item}</p>
+                <p>Size: ${value.size}</p>
+                <p>Number Ordered: ${value.qnty}</p>
+                <p>Number Made: ${value.made}</p>
+                <br><br>
+                <button onclick="updateStatus([${ordernum}, 'Pending'])">Set <br> Pending</button>
+                <button onclick="updateStatus([${ordernum}, 'WIP'])">Set <br> WIP</button>
+                <button onclick="updateStatus([${ordernum}, 'Canceled'])">Set <br> Canceled</button>
+                <button onclick="updateStatus([${ordernum}, 'Complete'])">Set <br> Complete</button>
+                `
+              );
+            });
+            // resolve(data);
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+      }
+
       // orderNumSt = one array, two items [orderNum, status];
       function updateStatus(orderNumSt) {
         orderlist.innerHTML = "";
@@ -110,7 +162,11 @@
           .then((response) => response.json())
           .then((data) => {
             // console.log("Success:", data);
-            fetchAndDisplayOrders(lastFilter);
+            if(singleOrder === false){
+              fetchAndDisplayOrders(lastFilter);
+            } else {
+              fetchAndDisplaySingle(lastOrder);
+            }
           })
           .catch((error) => {
             console.error("Error:", error);
