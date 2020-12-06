@@ -71,27 +71,33 @@
                 <hr>
                 `
               );
-              data.forEach(function (value, index) {
-                orderlist.insertAdjacentHTML(
-                  "beforeend",
-                  `
-                  <p>Date: ${value.Date}</p>
-                  <p>${value.Email}</p>
-                  <p>Order # ${value.orderNum}</p>
-                  <button onclick="fetchAndDisplaySingle(${value.orderNum})">View Details</button>
-                  <br><br>
-                  <p>Status: <strong style="background: yellow; padding: 3px;">${value.orderStatus}</strong>
+              if (data.length > 0) {
+                data.forEach(function (value, index) {
+                  orderlist.insertAdjacentHTML(
+                    "beforeend",
+                    `
+                    <p>Date: ${value.Date}</p>
+                    <p>${value.Email}</p>
+                    <p>Order # ${value.orderNum}</p>
+                    <button onclick="fetchAndDisplaySingle(${value.orderNum})">View Details</button>
                     <br><br>
-                    <button onclick="updateStatus([${value.orderNum}, 'Pending'])">Set <br> Pending</button>
-                    <button onclick="updateStatus([${value.orderNum}, 'WIP'])">Set <br> WIP</button>
-                    <button onclick="updateStatus([${value.orderNum}, 'Canceled'])">Set <br> Canceled</button>
-                    <button onclick="updateStatus([${value.orderNum}, 'Complete'])">Set <br> Complete</button>
-                  </p>
-                  <button style="background: red; color: white;">Delete Order</button>
-                  <hr>
-                  `
-                );
-              });
+                    <p>Status: <strong style="background: yellow; padding: 3px;">${value.orderStatus}</strong>
+                      <br><br>
+                      <button onclick="updateStatus([${value.orderNum}, 'Pending'])">Set <br> Pending</button>
+                      <button onclick="updateStatus([${value.orderNum}, 'WIP'])">Set <br> WIP</button>
+                      <button onclick="updateStatus([${value.orderNum}, 'Canceled'])">Set <br> Canceled</button>
+                      <button onclick="updateStatus([${value.orderNum}, 'Complete'])">Set <br> Complete</button>
+                    </p>
+                    <button style="background: red; color: white;">Delete Order</button>
+                    <hr>
+                    `
+                  );
+                });
+              } else { orderlist.insertAdjacentHTML("beforeend",
+                `
+                <p>No orders found</p>
+                `
+              )}
               resolve(data);
             })
             .catch((error) => {
@@ -116,7 +122,7 @@
           .then((data) => {
             orderlist.innerHTML = "";
             // First array item is order details
-            if(!data){
+            if(data.length > 0){
               let details = data.shift();
               orderlist.insertAdjacentHTML(
                 "afterbegin",
