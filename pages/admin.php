@@ -21,7 +21,7 @@
     <button onclick="fetchAndDisplayOrders()">All</button>
     <button onclick="fetchAndDisplayPending()">Pending</button>
     <button onclick="fetchAndDisplayWIP()">WIP</button>
-    <button>Completed</button>
+    <button onclick="fetchAndDisplayComplete()">Completed</button>
     <button onclick="fetchAndDisplayCanceled()">Canceled</button>
     <br /><br />
     Order # or Email <input type="text" name="" id="orderOrEmail" />
@@ -63,6 +63,7 @@
                     <button onclick="updateStatus([${value.orderNum}, 'WIP'])">Status - WIP</button>
                     <button onclick="updateStatus([${value.orderNum}, 'Pending'])">Status - Pending</button>
                     <button onclick="updateStatus([${value.orderNum}, 'Canceled'])">Status - Canceled</button>
+                    <button onclick="updateStatus([${value.orderNum}, 'Complete'])">Status - Complete</button>
                   </p>
                   <button>Delete Order</button>
                   <hr>
@@ -78,11 +79,6 @@
         });
       }
       fetchAndDisplayOrders();
-
-      function searchOrderOrEmail() {
-        let query = document.getElementById("orderOrEmail").value;
-        alert(`You would have searched for "${query}"`);
-      }
 
       async function fetchAndDisplayPending() {
         orderlist.innerHTML = "";
@@ -114,6 +110,7 @@
                       <button onclick="updateStatus([${value.orderNum}, 'WIP'])">Status - WIP</button>
                       <button onclick="updateStatus([${value.orderNum}, 'Pending'])">Status - Pending</button>
                       <button onclick="updateStatus([${value.orderNum}, 'Canceled'])">Status - Canceled</button>
+                      <button onclick="updateStatus([${value.orderNum}, 'Complete'])">Status - Complete</button>
                     </p>
                     <button>Delete Order</button>
                     <hr>
@@ -159,6 +156,7 @@
                     <button onclick="updateStatus([${value.orderNum}, 'WIP'])">Status - WIP</button>
                     <button onclick="updateStatus([${value.orderNum}, 'Pending'])">Status - Pending</button>
                     <button onclick="updateStatus([${value.orderNum}, 'Canceled'])">Status - Canceled</button>
+                    <button onclick="updateStatus([${value.orderNum}, 'Complete'])">Status - Complete</button>
                   </p>
                   <button>Delete Order</button>
                   <hr>
@@ -204,6 +202,7 @@
                     <button onclick="updateStatus([${value.orderNum}, 'WIP'])">Status - WIP</button>
                     <button onclick="updateStatus([${value.orderNum}, 'Pending'])">Status - Pending</button>
                     <button onclick="updateStatus([${value.orderNum}, 'Canceled'])">Status - Canceled</button>
+                    <button onclick="updateStatus([${value.orderNum}, 'Complete'])">Status - Complete</button>
                   </p>
                   <button>Delete Order</button>
                   <hr>
@@ -211,6 +210,52 @@
                 );
               });
               lastFilter = "canceled";
+              resolve(data);
+            })
+            .catch((error) => {
+              console.error("Error:", error);
+            });
+        });
+      }
+
+      async function fetchAndDisplayComplete() {
+        orderlist.innerHTML = "";
+        return new Promise((resolve) => {
+          fetch("../php/admin_fetchComplete.php", {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              orderlist.innerHTML = "";
+              orderlist.insertAdjacentHTML(
+                "afterbegin",
+                `
+                <h3>Complete Orders</h3>
+                <hr>
+                `
+              );
+              data.forEach(function (value, index) {
+                orderlist.insertAdjacentHTML(
+                  "beforeend",
+                  `
+                  <p>Date: ${value.Date}</p>
+                  <p>${value.Email}</p>
+                  <p>Order # ${value.orderNum}</p>
+                  <p>Status: ${value.orderStatus} 
+                    <button onclick="updateStatus([${value.orderNum}, 'WIP'])">Status - WIP</button>
+                    <button onclick="updateStatus([${value.orderNum}, 'Pending'])">Status - Pending</button>
+                    <button onclick="updateStatus([${value.orderNum}, 'Canceled'])">Status - Canceled</button>
+                    <button onclick="updateStatus([${value.orderNum}, 'Complete'])">Status - Complete</button>
+                  </p>
+                  <button>Delete Order</button>
+                  <hr>
+                  `
+                );
+              });
+              lastFilter = "complete";
               resolve(data);
             })
             .catch((error) => {
@@ -248,7 +293,14 @@
           fetchAndDisplayWIP();
         } else if (lastFilter === "canceled") {
           fetchAndDisplayCanceled();
+        } else if (lastFilter === "complete") {
+          fetchAndDisplayComplete();
         }
+      }
+
+      function searchOrderOrEmail() {
+        let query = document.getElementById("orderOrEmail").value;
+        alert(`You would have searched for "${query}"`);
       }
 
     </script>
