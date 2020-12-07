@@ -4,6 +4,39 @@
   box-sizing: border-box;
 }
 
+html {
+  padding: 10px;
+}
+
 button {
   width: 100px;
+}
+
+.deleteBtn {
+  background: red;
+  color: white;
+  margin-top: 15px;
+}
+
+.updateStatusBtns button {
+  margin: 5px;
+}
+
+.tac {
+  text-align: center;
+}
+
+.ui-dialog-buttonpane {
+  display: flex;
+  justify-content: center;
+}
+
+#filterBtns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr;
+  gap: 5px 5px;
+  grid-template-areas: ".." ".." "..";
+  margin: 10px auto 10px auto;
+  max-width: min-content;
 }

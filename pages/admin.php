@@ -18,22 +18,19 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js" integrity="sha512-uto9mlQzrs59VwILcLiRYeLKPPbS/bT71da/OEBYEwcdNUk8jYIy+D176RYoop1Da+f9mvkYrmj5MCLZWEtQuA==" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" integrity="sha512-aOG0c6nPNzGk+5zjwyJaoRUgCdOrfSDhmMID2u4+OIslr0GjpLKo7Xm0Ao3xmpM4T8AmIouRkqwj1nrdVsLKEQ==" crossorigin="anonymous" />
     <link rel="stylesheet" href="../styles/admin.css">
-    <style>
-      .ui-dialog-buttonpane {
-        display: flex;
-        justify-content: center;
-      }
-    </style>
   </head>
   <body>
-    <h3>Admin Page</h3>
+    <h3>DBT Admin</h3>
     <button onclick="location = './session.php' ">Back</button>
-    <button onclick="fetchAndDisplayOrders('all')">All</button>
-    <button onclick="fetchAndDisplayOrders('pending')">Pending</button>
-    <button onclick="fetchAndDisplayOrders('wip')">WIP</button>
-    <button onclick="fetchAndDisplayOrders('canceled')">Canceled</button>
-    <button onclick="fetchAndDisplayOrders('complete')">Complete</button>
-    <br /><br />
+    <div id="filterBtns">
+      <p class="tac">Filters</p>
+      <button onclick="fetchAndDisplayOrders('all')">All</button>
+      <button onclick="fetchAndDisplayOrders('pending')">Pending</button>
+      <button onclick="fetchAndDisplayOrders('wip')">WIP</button>
+      <button onclick="fetchAndDisplayOrders('canceled')">Canceled</button>
+      <button onclick="fetchAndDisplayOrders('complete')">Complete</button>
+    </div>
+    <hr>
     Order # <!---or Email---> <input onchange="searchQuery = this.value" type="text" name="" id="orderOrEmail" />
     <button onclick="fetchAndDisplaySingle(searchQuery)">Search</button>
     <hr />
@@ -76,7 +73,7 @@
           })
             .then((response) => response.json())
             .then((data) => {
-              orderlist.innerHTML = "";
+              // orderlist.innerHTML = "";
               orderlist.insertAdjacentHTML(
                 "afterbegin",
                 `
@@ -86,22 +83,29 @@
               );
               if (data.length > 0) {
                 data.forEach(function (value, index) {
+                  let date = new Date(value.Date);
+                  date = date.toDateString(); 
                   orderlist.insertAdjacentHTML(
                     "beforeend",
                     `
-                    <p>Date: ${value.Date}</p>
-                    <p>${value.Email}</p>
-                    <p>Order # ${value.orderNum}</p>
+                    <p>Order # <strong>${value.orderNum}</strong></p>
+                    <p>&nbsp;${value.Email}</p>
+                    <p>&nbsp;&nbsp;${date}</p>
+                    <br>
                     <button onclick="fetchAndDisplaySingle(${value.orderNum})">View Details</button>
                     <br><br>
                     <p>Status: <strong style="background: yellow; padding: 3px;">${value.orderStatus}</strong>
-                      <br><br>
-                      <button onclick="updateStatus([${value.orderNum}, 'Pending'])">Set <br> Pending</button>
-                      <button onclick="updateStatus([${value.orderNum}, 'WIP'])">Set <br> WIP</button>
-                      <button onclick="updateStatus([${value.orderNum}, 'Canceled'])">Set <br> Canceled</button>
-                      <button onclick="updateStatus([${value.orderNum}, 'Complete'])">Set <br> Complete</button>
+                      <br>
+                      <p>Set Status:</p>
+                      <div class="updateStatusBtns">
+                        <button onclick="updateStatus([${value.orderNum}, 'Pending'])">Pending</button>
+                        <button onclick="updateStatus([${value.orderNum}, 'WIP'])">WIP</button>
+                        <button onclick="updateStatus([${value.orderNum}, 'Canceled'])">Canceled</button>
+                        <button onclick="updateStatus([${value.orderNum}, 'Complete'])">Complete</button>
+                      </div>
                     </p>
-                    <button style="background: red; color: white;" onclick="deleteOrder(${value.orderNum})">Delete <br> Order</button>
+                    <button class="deleteBtn" onclick="deleteOrder(${value.orderNum})">Delete</button>
+                    <br><br>
                     <hr>
                     `
                   );
@@ -156,7 +160,6 @@
       }
 
       function fetchAndDisplaySingle (ordernum) {
-        orderlist.innerHTML = "";
         singleOrder = true;
         lastOrder = ordernum;
         fetch(`../php/admin_fetchDetails.php`, {
@@ -172,13 +175,24 @@
             // First array item is order details
             if(data.length > 0){
               let details = data.shift();
+              let date = new Date(details.Date)
+              date = date.toDateString();
               orderlist.insertAdjacentHTML(
                 "afterbegin",
                 `
                 <h3>Order # ${details.orderNum} Details</h3>
+                <p>&nbsp; ${details.Email}</p>
+                <p>&nbsp;&nbsp; ${date}</p>
                 <h3 style="background: yellow;">Status: ${details.orderStatus}</h3>
-                <h3>Date: ${details.Date}</h3>
-                <h3>Email: ${details.Email}</h3>
+                <br>
+                <div class="updateStatusBtns">
+                  <button onclick="updateStatus([${details.orderNum}, 'Pending'])">Pending</button>
+                  <button onclick="updateStatus([${details.orderNum}, 'WIP'])">WIP</button>
+                  <button onclick="updateStatus([${details.orderNum}, 'Canceled'])">Canceled</button>
+                  <button onclick="updateStatus([${details.orderNum}, 'Complete'])">Complete</button>
+                </div>
+                <button class="deleteBtn" onclick="deleteOrder(${details.orderNum})">Delete</button>
+                <br><br>
                 <hr>
                 `
               );
@@ -208,11 +222,9 @@
                       'addOrSub': 'add'
                     }
                   )">+1</button>
+                  
                   <br><br>
-                  <button onclick="updateStatus([${details.orderNum}, 'Pending'])">Set <br> Pending</button>
-                  <button onclick="updateStatus([${details.orderNum}, 'WIP'])">Set <br> WIP</button>
-                  <button onclick="updateStatus([${details.orderNum}, 'Canceled'])">Set <br> Canceled</button>
-                  <button onclick="updateStatus([${details.orderNum}, 'Complete'])">Set <br> Complete</button>
+                  <hr>
                   `
                 );
               });

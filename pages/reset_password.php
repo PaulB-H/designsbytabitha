@@ -5,41 +5,41 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-    <meta charset="UTF-8" />
-    <title>Reset Password</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="Cache-control" content="public, max-age=3600" />
-    <link rel="stylesheet" type="text/css" href="../styles/account.css">
-    <style>
-        #content {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            background: white;
-            padding: 10px;
-            width: 100%;
-        }
+  <meta charset="UTF-8" />
+  <title>Reset Password</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Cache-control" content="public, max-age=3600" />
+  <link rel="stylesheet" type="text/css" href="../styles/account.css">
+  <style>
+      #content {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          flex-direction: column;
+          background: white;
+          padding: 10px;
+          width: 100%;
+      }
 
-        #submitBtn {
-            font-size: 125%;
-            width: 100%;
-            border: none;
-        }
+      #submitBtn {
+          font-size: 125%;
+          width: 100%;
+          border: none;
+      }
 
-        button {
-            width: 100%;
-            border: none;
-            font-size: 125%;
-            margin-top: 10px;
-            max-width: 268.35px;
-        }
+      button {
+          width: 100%;
+          border: none;
+          font-size: 125%;
+          margin-top: 10px;
+          max-width: 268.35px;
+      }
 
-        h3,
-        h2 {
-            font-family: sans-serif;
-        }
-    </style>
+      h3,
+      h2 {
+          font-family: sans-serif;
+      }
+  </style>
 </head>
 
 <body>
@@ -49,16 +49,16 @@
   if ($_SERVER["REQUEST_METHOD"] == "POST") {
   
     if (empty($_POST["email"])) {
-        $emailErr = "<br>Email is required<br>";
+      $emailErr = "<br>Email is required<br>";
     } else {
-        $email = test_input($_POST["email"]);
-        // check if e-mail address is well-formed
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            $emailErr = "Invalid email format";
-        } else { 
-            $validEmail = $email;
-            $myVar ++;
-        }
+      $email = test_input($_POST["email"]);
+      // check if e-mail address is well-formed
+      if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $emailErr = "Invalid email format";
+      } else { 
+        $validEmail = $email;
+        $myVar ++;
+      }
     }
   
     if ($myVar === 1){
@@ -87,9 +87,9 @@
     
         $tempPass = "";
         
-        $upper = "ABCDEFGHJKMNPQRSTUVWXYZ"; // 22 char long
-        $lower = "abcdefghjkmnpqrstuvwxyz"; // 22 char long
-        $nums = "123456789"; // 8 char long
+        $upper = "ABCDEFGHJKMNPQRSTUVWXYZ";
+        $lower = "abcdefghjkmnpqrstuvwxyz";
+        $nums = "123456789";
         
         $tempPass .= $upper[rand(0,22)];
         $tempPass .= $lower[rand(0,22)];
@@ -160,9 +160,9 @@
     <h2 id="errorBox"><?php echo $errorMessage; ?></h2>
 
     <a href="./session.php" style="width: 100%; text-align: center;">
-        <button class="fancyBtn">
-            Back
-        </button>
+      <button class="fancyBtn">
+        Back
+      </button>
     </a>
 
   </div>
