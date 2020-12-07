@@ -14,7 +14,16 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>DBT Admin</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js" integrity="sha512-uto9mlQzrs59VwILcLiRYeLKPPbS/bT71da/OEBYEwcdNUk8jYIy+D176RYoop1Da+f9mvkYrmj5MCLZWEtQuA==" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" integrity="sha512-aOG0c6nPNzGk+5zjwyJaoRUgCdOrfSDhmMID2u4+OIslr0GjpLKo7Xm0Ao3xmpM4T8AmIouRkqwj1nrdVsLKEQ==" crossorigin="anonymous" />
     <link rel="stylesheet" href="../styles/admin.css">
+    <style>
+      .ui-dialog-buttonpane {
+        display: flex;
+        justify-content: center;
+      }
+    </style>
   </head>
   <body>
     <h3>Admin Page</h3>
@@ -29,6 +38,10 @@
     <button onclick="fetchAndDisplaySingle(searchQuery)">Search</button>
     <hr />
     <div id="orderlist"></div>
+
+    <div id="dialog-confirm" title="Confirm Delete Order" style="visibility: hidden;">
+      
+    </div>
 
     <script>
       const orderlist = document.getElementById("orderlist");
@@ -88,7 +101,7 @@
                       <button onclick="updateStatus([${value.orderNum}, 'Canceled'])">Set <br> Canceled</button>
                       <button onclick="updateStatus([${value.orderNum}, 'Complete'])">Set <br> Complete</button>
                     </p>
-                    <button style="background: red; color: white;">Delete Order</button>
+                    <button style="background: red; color: white;" onclick="deleteOrder(${value.orderNum})">Delete <br> Order</button>
                     <hr>
                     `
                   );
@@ -107,7 +120,42 @@
       }
       fetchAndDisplayOrders("all");
 
-      function fetchAndDisplaySingle(ordernum){
+      function deleteOrder (num) {
+        $( "#dialog-confirm" ).dialog({
+          resizable: false,
+          height: "auto",
+          width: "auto",
+          modal: true,
+          title: `Delete Order ${num} ?`,
+          buttons: {
+            "YES \n Delete": function() {
+              orderlist.innerHTML = "";
+              $( this ).dialog( "close" );
+              fetch(`../php/admin_deleteOrder.php`, {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify(num),
+              })
+                .then((response) => response.json())
+                .then((data) => {
+                  console.log(data)
+                  if(singleOrder === false){
+                    fetchAndDisplayOrders(lastFilter);
+                  } else {
+                    fetchAndDisplaySingle(lastOrder);
+                  }
+                })
+            },
+            "NO \n Cancel": function() {
+              $( this ).dialog( "close" );
+            }
+          }
+        });
+      }
+
+      function fetchAndDisplaySingle (ordernum) {
         orderlist.innerHTML = "";
         singleOrder = true;
         lastOrder = ordernum;
@@ -182,13 +230,13 @@
           });
       }
 
-      // Incomming object:
+      // Incomming object for updateItemsMade:
       // {
       //  'orderNum': ${details.orderNum}, 
       //  'fabricName': '${value.item}', 
       //  'numOrdered': ${value.qnty}, 
       //  'numMade': ${value.made}, 
-      //  'addOrSub': 'sub'
+      //  'addOrSub': 'add || sub'
       // }
       function updateItemsMade (obj) {
         if (obj.addOrSub === 'sub') {
@@ -238,7 +286,7 @@
           });
       }
 
-      // orderNumSt = one array, two items [orderNum, status];
+      // orderNumSt = array [orderNum, status];
       function updateStatus(orderNumSt) {
         orderlist.innerHTML = "";
         fetch("../php/admin_updateStatus.php", {
