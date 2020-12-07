@@ -142,11 +142,29 @@
                   <p>Size: ${value.size}</p>
                   <p>Number Ordered: ${value.qnty}</p>
                   <p>Number Made: ${value.made}</p>
+                  <button onclick="updateItemsMade(
+                    {
+                      'orderNum': ${details.orderNum}, 
+                      'fabricName': '${value.item}', 
+                      'numOrdered': ${value.qnty}, 
+                      'numMade': ${value.made}, 
+                      'addOrSub': 'sub'
+                    }
+                  )">-1</button>
+                  <button onclick="updateItemsMade(
+                    {
+                      'orderNum': ${details.orderNum}, 
+                      'fabricName': '${value.item}', 
+                      'numOrdered': ${value.qnty}, 
+                      'numMade': ${value.made}, 
+                      'addOrSub': 'add'
+                    }
+                  )">+1</button>
                   <br><br>
-                  <button onclick="updateStatus([${ordernum}, 'Pending'])">Set <br> Pending</button>
-                  <button onclick="updateStatus([${ordernum}, 'WIP'])">Set <br> WIP</button>
-                  <button onclick="updateStatus([${ordernum}, 'Canceled'])">Set <br> Canceled</button>
-                  <button onclick="updateStatus([${ordernum}, 'Complete'])">Set <br> Complete</button>
+                  <button onclick="updateStatus([${details.orderNum}, 'Pending'])">Set <br> Pending</button>
+                  <button onclick="updateStatus([${details.orderNum}, 'WIP'])">Set <br> WIP</button>
+                  <button onclick="updateStatus([${details.orderNum}, 'Canceled'])">Set <br> Canceled</button>
+                  <button onclick="updateStatus([${details.orderNum}, 'Complete'])">Set <br> Complete</button>
                   `
                 );
               });
@@ -158,6 +176,62 @@
               )
             }
             // resolve(data);
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+      }
+
+      // Incomming object:
+      // {
+      //  'orderNum': ${details.orderNum}, 
+      //  'fabricName': '${value.item}', 
+      //  'numOrdered': ${value.qnty}, 
+      //  'numMade': ${value.made}, 
+      //  'addOrSub': 'sub'
+      // }
+      function updateItemsMade (obj) {
+        if (obj.addOrSub === 'sub') {
+          if (obj.numMade === 0) {
+            // console.log("Cant go lower")
+          } else {
+            orderlist.innerHTML = "";
+            let updateItemsMade = obj.numMade -1;
+            let arr = [
+              obj.orderNum,
+              `${obj.fabricName}`,
+              updateItemsMade,
+            ];
+            updateItemsMadeFetch(arr)
+          }
+        } else if (obj.addOrSub === 'add') {
+          if (obj.numMade === obj.numOrdered) {
+            // console.log("Cant go higher")
+          } else {
+            orderlist.innerHTML = "";
+            let updateItemsMade = obj.numMade +1;
+            let arr = [
+              obj.orderNum,
+              `${obj.fabricName}`,
+              updateItemsMade,
+            ];
+            updateItemsMadeFetch(arr)
+          }
+        }
+      }
+
+      // Incoming Array: [orderNum, "fabricName", udpateItemsMade]
+      function updateItemsMadeFetch (arr) {
+        fetch(`../php/admin_updateItemsMade.php`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(arr),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            fetchAndDisplaySingle(lastOrder);
           })
           .catch((error) => {
             console.error("Error:", error);
