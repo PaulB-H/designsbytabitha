@@ -99,6 +99,8 @@
         $tempPass .= $lower[rand(0,22)];
         $tempPass .= $lower[rand(0,22)];
         $tempPass .= $nums[rand(0,8)];
+
+        $tempPass = str_shuffle($tempPass);
         
         $stmt = $con->prepare("UPDATE users SET TempPass = ? WHERE Email = ?");
         $stmt->bind_param( "ss", password_hash($tempPass, PASSWORD_BCRYPT), $validEmail);
