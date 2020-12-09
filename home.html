@@ -244,24 +244,24 @@
             var spacer3top = spacer3.top - 100;
 
             if ($(window).scrollTop() < $("#header").outerHeight(true)) {
-              console.log("Clear all nav bold");
+              // console.log("Clear all nav bold");
               $("#nav1,#nav2,#nav3").removeAttr("style");
             } else if (
               $(window).scrollTop() > spacer1top &&
               $(window).scrollTop() < spacer2top
             ) {
-              console.log("Bold nav 1");
+              // console.log("Bold nav 1");
               $("#nav1,#nav2,#nav3").removeAttr("style");
               $("#nav1").css("border-bottom", "3px solid red");
             } else if (
               $(window).scrollTop() > spacer2top &&
               $(window).scrollTop() < spacer3top
             ) {
-              console.log("Bold nav 2");
+              // console.log("Bold nav 2");
               $("#nav1,#nav2,#nav3").removeAttr("style");
               $("#nav2").css("border-bottom", "3px solid red");
             } else if ($(window).scrollTop() > spacer3top) {
-              console.log("Bold nav 3");
+              // console.log("Bold nav 3");
               $("#nav1,#nav2,#nav3").removeAttr("style");
               $("#nav3").css("border-bottom", "3px solid red");
             }
@@ -275,8 +275,6 @@
 
             $("#nav" + i).click(function () {
               if ($(window).height() < 600) {
-                console.log("Condition 1");
-
                 boxOffset = $(currentBox).offset().top;
 
                 $([document.documentElement, document.body]).animate(
@@ -286,8 +284,6 @@
                   1000
                 );
               } else if ($(window).width() < 846) {
-                console.log("Condition 2");
-
                 boxOffset = $(currentBox).offset().top;
 
                 $([document.documentElement, document.body]).animate(
@@ -297,8 +293,6 @@
                   1000
                 );
               } else {
-                console.log("Condition 3");
-
                 boxOffset = $(currentBox).offset().top;
 
                 $([document.documentElement, document.body]).animate(
