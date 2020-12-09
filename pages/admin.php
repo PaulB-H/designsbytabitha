@@ -46,7 +46,7 @@
       let singleOrder = false;
       let lastOrder;
 
-      async function fetchAndDisplayOrders(filter) {
+      function fetchAndDisplayOrders(filter) {
         orderlist.innerHTML = "";
         lastFilter = filter;
         singleOrder = false;
@@ -64,63 +64,60 @@
           url = "fetchCanceled";
         }
 
-        return new Promise((resolve) => {
-          fetch(`../php/admin_${url}.php`, {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          })
-            .then((response) => response.json())
-            .then((data) => {
-              // orderlist.innerHTML = "";
-              orderlist.insertAdjacentHTML(
-                "afterbegin",
-                `
-                <h3>${filter.toUpperCase()} Orders</h3>
-                <hr>
-                `
-              );
-              if (data.length > 0) {
-                data.forEach(function (value, index) {
-                  let date = new Date(value.Date);
-                  date = date.toDateString(); 
-                  orderlist.insertAdjacentHTML(
-                    "beforeend",
-                    `
-                    <p>Order # <strong>${value.orderNum}</strong></p>
-                    <p>&nbsp;${value.Email}</p>
-                    <p>&nbsp;&nbsp;${date}</p>
+        fetch(`../php/admin_${url}.php`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            // orderlist.innerHTML = "";
+            orderlist.insertAdjacentHTML(
+              "afterbegin",
+              `
+              <h3>${filter.toUpperCase()} Orders</h3>
+              <hr>
+              `
+            );
+            if (data.length > 0) {
+              data.forEach(function (value, index) {
+                let date = new Date(value.Date);
+                date = date.toDateString(); 
+                orderlist.insertAdjacentHTML(
+                  "beforeend",
+                  `
+                  <p>Order # <strong>${value.orderNum}</strong></p>
+                  <p>&nbsp;${value.Email}</p>
+                  <p>&nbsp;&nbsp;${date}</p>
+                  <br>
+                  <button onclick="fetchAndDisplaySingle(${value.orderNum})">View Details</button>
+                  <br><br>
+                  <p>Status: <strong style="background: yellow; padding: 3px;">${value.orderStatus}</strong>
                     <br>
-                    <button onclick="fetchAndDisplaySingle(${value.orderNum})">View Details</button>
-                    <br><br>
-                    <p>Status: <strong style="background: yellow; padding: 3px;">${value.orderStatus}</strong>
-                      <br>
-                      <p>Set Status:</p>
-                      <div class="updateStatusBtns">
-                        <button onclick="updateStatus([${value.orderNum}, 'Pending'])">Pending</button>
-                        <button onclick="updateStatus([${value.orderNum}, 'WIP'])">WIP</button>
-                        <button onclick="updateStatus([${value.orderNum}, 'Canceled'])">Canceled</button>
-                        <button onclick="updateStatus([${value.orderNum}, 'Complete'])">Complete</button>
-                      </div>
-                    </p>
-                    <button class="deleteBtn" onclick="deleteOrder(${value.orderNum})">Delete</button>
-                    <br><br>
-                    <hr>
-                    `
-                  );
-                });
-              } else { orderlist.insertAdjacentHTML("beforeend",
-                `
-                <p>No orders found</p>
-                `
-              )}
-              resolve(data);
-            })
-            .catch((error) => {
-              console.error("Error:", error);
-            });
-        });
+                    <p>Set Status:</p>
+                    <div class="updateStatusBtns">
+                      <button onclick="updateStatus([${value.orderNum}, 'Pending'])">Pending</button>
+                      <button onclick="updateStatus([${value.orderNum}, 'WIP'])">WIP</button>
+                      <button onclick="updateStatus([${value.orderNum}, 'Canceled'])">Canceled</button>
+                      <button onclick="updateStatus([${value.orderNum}, 'Complete'])">Complete</button>
+                    </div>
+                  </p>
+                  <button class="deleteBtn" onclick="deleteOrder(${value.orderNum})">Delete</button>
+                  <br><br>
+                  <hr>
+                  `
+                );
+              });
+            } else { orderlist.insertAdjacentHTML("beforeend",
+              `
+              <p>No orders found</p>
+              `
+            )}
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
       }
       fetchAndDisplayOrders("all");
 
@@ -235,7 +232,6 @@
                 `
               )
             }
-            // resolve(data);
           })
           .catch((error) => {
             console.error("Error:", error);
