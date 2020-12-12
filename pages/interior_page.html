@@ -1,30 +1,95 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Interiors by Tabitha</title>
-    <style>
-        *{
-            font-size:150%;
-            margin:0;
-            padding:0;
-        }
-    </style>
-</head>
-<body>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Comfortaa&family=Playfair+Display:wght@500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css"
+      integrity="sha512-O03ntXoVqaGUTAeAmvQ2YSzkCvclZEcPQu1eqloPaHfJ5RuNGiS4l+3duaidD801P50J28EHyonCV06CUlTSag=="
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/swiper/swiper-bundle.min.css"
+    />
+    <link rel="stylesheet" href="../styles/interior.css" />
+  </head>
+  <body>
+    <div id="header">
+      <h1 class="main-header">Interior Design</h1>
+      <hr class="header-hr" />
+    </div>
+    <br />
+    <div id="content">
+      <!-- Slider main container -->
+      <div class="swiper-container">
+        <!-- Additional required wrapper -->
+        <div class="swiper-wrapper">
+          <!-- Slides -->
+          <div class="swiper-slide">
+            <img
+              src="../images/interiors/black_and_white_master/before/bw_before1.jpg"
+            />
+          </div>
+          <div class="swiper-slide">
+            <img
+              src="../images/interiors/black_and_white_master/before/bw_before2.jpg"
+            />
+          </div>
+          <div class="swiper-slide">
+            <img
+              src="../images/interiors/black_and_white_master/after/bw_after1.jpg"
+            />
+          </div>
+          <div class="swiper-slide">
+            <img
+              src="../images/interiors/black_and_white_master/after/bw_after2.jpg"
+            />
+          </div>
+        </div>
+        <!-- If we need pagination -->
+        <div class="swiper-pagination"></div>
 
-<p>Interiors!</p>
-<p>Soon there will be something here...</p>
+        <!-- If we need navigation arrows -->
+        <!-- <div class="swiper-button-prev"></div>
+        <div class="swiper-button-next"></div> -->
 
-<p>For now... <button onclick="goBack()">Go Back</button></p>
+        <!-- If we need scrollbar -->
+        <!-- <div class="swiper-scrollbar"></div> -->
+      </div>
+      <div></div>
+    </div>
+    <div id="scriptbox">
+      <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+      <script>
+        let mySwiper = new Swiper(".swiper-container", {
+          // Optional parameters
+          direction: "horizontal",
+          loop: true,
 
+          // If we need pagination
+          pagination: {
+            el: ".swiper-pagination",
+          },
 
-<script>
-    function goBack() {
-      window.history.back();
-    }
-</script>
-</body>
+          // Navigation arrows
+          // navigation: {
+          //   nextEl: ".swiper-button-next",
+          //   prevEl: ".swiper-button-prev",
+          // },
+
+          // And if we need scrollbar
+          // scrollbar: {
+          //   el: ".swiper-scrollbar",
+          // },
+        });
+      </script>
+    </div>
+  </body>
 </html>
