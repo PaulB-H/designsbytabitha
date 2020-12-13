@@ -21,6 +21,7 @@
     <link rel="stylesheet" href="../styles/interior.css" />
   </head>
   <body>
+    <a id="back-btn" href="../home.html"> Back </a>
     <div id="header">
       <h1 class="main-header">Interior Design</h1>
       <hr class="header-hr" />
@@ -28,42 +29,63 @@
     <br />
     <div id="content">
       <!-- Slider main container -->
-      <div class="swiper-container">
+      <div class="swiper-container2">
         <!-- Additional required wrapper -->
         <div class="swiper-wrapper">
           <!-- Slides -->
           <div class="swiper-slide">
-            <img
-              src="../images/interiors/black_and_white_master/before/bw_before1.jpg"
-            />
-          </div>
-          <div class="swiper-slide">
-            <img
-              src="../images/interiors/black_and_white_master/before/bw_before2.jpg"
-            />
-          </div>
-          <div class="swiper-slide">
-            <img
-              src="../images/interiors/black_and_white_master/after/bw_after1.jpg"
-            />
-          </div>
-          <div class="swiper-slide">
-            <img
-              src="../images/interiors/black_and_white_master/after/bw_after2.jpg"
-            />
-          </div>
-        </div>
-        <!-- If we need pagination -->
-        <div class="swiper-pagination"></div>
+            <!-- Slider main container -->
+            <div class="swiper-container">
+              <!-- Additional required wrapper -->
+              <div class="swiper-wrapper">
+                <!-- Slides -->
+                <div class="swiper-slide">
+                  <img
+                    src="../images/interiors/black_and_white_master/before/bw_before1.jpg"
+                  />
+                </div>
+                <div class="swiper-slide">
+                  <img
+                    src="../images/interiors/black_and_white_master/before/bw_before2.jpg"
+                  />
+                </div>
+                <div class="swiper-slide">
+                  <img
+                    src="../images/interiors/black_and_white_master/after/bw_after1.jpg"
+                  />
+                </div>
+                <div class="swiper-slide">
+                  <img
+                    src="../images/interiors/black_and_white_master/after/bw_after2.jpg"
+                  />
+                </div>
+              </div>
+              <!-- If we need pagination -->
+              <div class="swiper-pagination"></div>
 
-        <!-- If we need navigation arrows -->
-        <!-- <div class="swiper-button-prev"></div>
+              <!-- If we need navigation arrows -->
+              <!-- <div class="swiper-button-prev"></div>
         <div class="swiper-button-next"></div> -->
 
-        <!-- If we need scrollbar -->
-        <!-- <div class="swiper-scrollbar"></div> -->
+              <!-- If we need scrollbar -->
+              <!-- <div class="swiper-scrollbar"></div> -->
+            </div>
+            <div class="swiper-slide">Slide 2</div>
+            <div class="swiper-slide">Slide 3</div>
+            ...
+          </div>
+          <!-- If we need pagination -->
+          <div class="swiper-pagination"></div>
+
+          <!-- If we need navigation buttons -->
+          <div class="swiper-button-prev"></div>
+          <div class="swiper-button-next"></div>
+
+          <!-- If we need scrollbar -->
+          <div class="swiper-scrollbar"></div>
+        </div>
+        <!-- End swiper 2 -->
       </div>
-      <div></div>
     </div>
     <div id="scriptbox">
       <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
@@ -71,6 +93,27 @@
         let mySwiper = new Swiper(".swiper-container", {
           // Optional parameters
           direction: "horizontal",
+          loop: true,
+
+          // If we need pagination
+          pagination: {
+            el: ".swiper-pagination",
+          },
+
+          // Navigation arrows
+          // navigation: {
+          //   nextEl: ".swiper-button-next",
+          //   prevEl: ".swiper-button-prev",
+          // },
+
+          // And if we need scrollbar
+          // scrollbar: {
+          //   el: ".swiper-scrollbar",
+          // },
+        });
+        let mySwiper2 = new Swiper(".swiper-container2", {
+          // Optional parameters
+          direction: "vertical",
           loop: true,
 
           // If we need pagination

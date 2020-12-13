@@ -28,6 +28,7 @@ h3 {
 }
 
 #back-btn {
+  text-decoration: none;
   font-family: "Comfortaa", cursive;
   margin: 5px;
   background: #575084;
