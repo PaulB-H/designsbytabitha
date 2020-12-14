@@ -40,6 +40,7 @@
       integrity="sha512-O03ntXoVqaGUTAeAmvQ2YSzkCvclZEcPQu1eqloPaHfJ5RuNGiS4l+3duaidD801P50J28EHyonCV06CUlTSag=="
       crossorigin="anonymous"
     />
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
     <link rel="stylesheet" href="../styles/mask_page.css" />
   </head>
 
@@ -91,7 +92,7 @@
       
     </div>
 
-    <h1 class="main-header">Face Masks</h1>
+    <h1 class="main-header" data-aos="fade-right">Face Masks</h1>
     <hr class="header-hr" />
 
     <!-- Mask Description -->
@@ -129,8 +130,8 @@
 
     <br />
 
-    <h3 style="text-align: center">Sizes</h3>
-    <div class="size-table">
+    <h3 style="text-align: center" data-aos="fade-right">Sizes</h3>
+    <div class="size-table" data-aos="fade-right">
       <p>Average</p>
       <p>Large</p>
       <p class="no-wrap">Child (3-6yrs)</p>
@@ -210,7 +211,12 @@
         crossorigin="anonymous"
       ></script>
 
+      <!-- AOS -->
+      <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+
       <script>
+        AOS.init();
+        
         var lastResponse;
         var copy;
         var stockOnDom;

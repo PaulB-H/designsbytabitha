@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="Cache-control" content="public, max-age=3600" />
     <title>Interiors by Tabitha</title>
+    <!-- AOS CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
     <!-- Link Swiper's CSS -->
     <link
       rel="stylesheet"
@@ -274,11 +276,16 @@
       crossorigin="anonymous"
     ></script>
 
+    <!-- AnimateOnScroll -->
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+
     <!-- Swiper JS -->
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
 
     <!-- Initialize Swiper -->
     <script>
+      AOS.init();
+
       let swiperH = new Swiper(".swiper-container-h", {
         spaceBetween: 50,
         loop: true,
@@ -287,6 +294,7 @@
           clickable: true,
         },
       });
+
       let swiperV = new Swiper(".swiper-container-v", {
         direction: "vertical",
         loop: true,
@@ -295,6 +303,11 @@
           el: ".swiper-pagination-v",
           clickable: true,
         },
+      });
+
+      // Console logs which div was animated in
+      document.addEventListener("aos:in", ({ detail }) => {
+        console.log("animated in", detail);
       });
     </script>
   </body>

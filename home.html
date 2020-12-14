@@ -37,6 +37,8 @@
       integrity="sha512-O03ntXoVqaGUTAeAmvQ2YSzkCvclZEcPQu1eqloPaHfJ5RuNGiS4l+3duaidD801P50J28EHyonCV06CUlTSag=="
       crossorigin="anonymous"
     />
+    <!-- AnimateOnScroll -->
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
     <link rel="stylesheet" href="./styles/home.css" />
     <link rel="shortcut icon" href="./favicon.ico" type="image/x-icon" />
     <link rel="icon" href="./favicon.ico" type="image/x-icon" />
@@ -44,14 +46,14 @@
 
   <body>
     <div id="header">
-      <img src="images/vector/header.svg" alt="" />
+      <img src="images/vector/header.svg" alt="" data-aos="flip-up" />
       <div class="header-text">
-        <h3>
+        <h3 data-aos="fade-left">
           Designs By
           <span class="header-br"><br /></span>
           Tabitha Bernard
         </h3>
-        <p>
+        <p data-aos="fade-right">
           416-899-4131
           <span class="header-br"><br /></span>
           <a href="mailto:tabitha@designsbytabitha.ca">
@@ -63,7 +65,7 @@
       </div>
     </div>
 
-    <div id="navbar" style="z-index: 1000">
+    <div id="navbar" style="z-index: 1000" data-aos="fade-up">
       <p id="nav1">Face Masks</p>
       <p id="nav2">Interiors</p>
       <p id="nav3">Artwork</p>
@@ -89,7 +91,7 @@
               alt="image-link to masks page"
             />
             <i class="fas fa-mouse-pointer"></i>
-            <p class="link-label">
+            <p class="link-label" data-aos="fade-right">
               click for
               <br />
               <span class="label-sub-header">FACE MASKS</span>
@@ -117,7 +119,7 @@
               alt="image-link to interiors page"
             />>
             <i class="fas fa-mouse-pointer"></i>
-            <p class="link-label">
+            <p class="link-label" data-aos="fade-left">
               click for
               <br />
               <span class="label-sub-header">INTERIORS</span>
@@ -145,7 +147,7 @@
               alt="image-link to art page"
             />>
             <i class="fas fa-mouse-pointer"></i>
-            <p class="link-label">
+            <p class="link-label" data-aos="fade-up">
               click for
               <br />
               <span class="label-sub-header">ART</span>
@@ -203,8 +205,12 @@
         integrity="sha512-Zq9o+E00xhhR/7vJ49mxFNJ0KQw1E1TMWkPTxrWcnpfEFDEXgUiwJHIKit93EW/XxE31HSI5GEOW06G6BF1AtA=="
         crossorigin="anonymous"
       ></script>
+      <!-- AnimateOnScroll -->
+      <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
 
       <script>
+        AOS.init();
+
         function pageError() {
           iziToast.warning({
             title: "Not yet ready!",
