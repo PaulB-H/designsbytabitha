@@ -29,11 +29,4 @@
   >
     <p>- Live Site</p>
   </a>
-  <a
-    class="repolink"
-    href="https://github.com/PaulB-H/designsbytabitha"
-    target="_blank"
-  >
-    <p>- Github Repo</p>
-  </a>
 </div>
