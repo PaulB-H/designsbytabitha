@@ -11,11 +11,17 @@
 
 <h2>Details</h2>
 <p>The logo on the homepage was made by taking a commissioned image and running it through a vector converter, turning it into an SVG.</p>
+
 <p>The masks page pulls data from the SQL database, and links to account management, so you can log in and place an order.</p>
 <p>User passwords are hashed and salted before entry into the DB, and I used PHP-Session to manage logins.</p>
+
 <p>I used a lightweight popup library called iziToast to help build the shopping cart functionality, and display other alerts and errors.</p>
-<p>There is an administrator order-management section, providing the ability to filter and search orders, update their status, and even keep track of items made per order vs how many were requested.
-</p>
+<img src="https://raw.githubusercontent.com/PaulB-H/designsbytabitha/master/images/readme_images/izitoast.PNG" alt="example of izitoast modal library in use" />
+<p><sup><strong>Example of izitoast in use</strong></sup></p>
+
+<p>There is an administrator order-management section, providing the ability to filter and search orders, update their status, and keep track of items made so far vs how many were requested.</p>
+<img src="https://raw.githubusercontent.com/PaulB-H/designsbytabitha/master/images/readme_images/admin_order_details.PNG" alt="image of admin order management system" />
+<p><sup><strong>Example of admin order management system</strong></sup></p>
 
 <h2>Libraries / Frameworks / Packages</h2>
 <ul>
