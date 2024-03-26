@@ -2,14 +2,6 @@
 
     include("../php/session_start.php");
     
-    if($_SESSION["user"] != ""){
-        $to = "p.bernardhall@gmail.com";
-        $subject = "New User";
-        $txt = "New user signed up!";
-        $headers = "From: tabitha@designsbytabitha.ca";
-        mail($to,$subject,$txt,$headers);
-    }
-    
 ?>
 
 <!DOCTYPE html>
