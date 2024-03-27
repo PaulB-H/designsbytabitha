@@ -1,10 +1,11 @@
 <?php
 
-  include("../php/session_start.php");
-		
-  if($_SESSION["roles"] !== "admin"){
-    header('Location: ./mask_page.php');
-  }
+include("../php/session_start.php");
+
+if(!isset($_SESSION["roles"]) || $_SESSION["roles"] !== "admin"){
+  header('Location: ./mask_page.php');
+  exit();
+}
 
 ?>
 
