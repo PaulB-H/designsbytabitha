@@ -19,12 +19,22 @@ if(!isset($_SESSION["roles"]) || $_SESSION["roles"] !== "admin"){
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js" integrity="sha512-uto9mlQzrs59VwILcLiRYeLKPPbS/bT71da/OEBYEwcdNUk8jYIy+D176RYoop1Da+f9mvkYrmj5MCLZWEtQuA==" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" integrity="sha512-aOG0c6nPNzGk+5zjwyJaoRUgCdOrfSDhmMID2u4+OIslr0GjpLKo7Xm0Ao3xmpM4T8AmIouRkqwj1nrdVsLKEQ==" crossorigin="anonymous" />
     <link rel="stylesheet" href="../styles/admin.css">
+    <style>
+      button {
+        margin: 5px;
+        padding: 5px 0;
+      }
+      .invert {
+        filter: invert(100%);
+      }
+    </style>
   </head>
   <body>
     <h3>DBT Admin</h3>
     <button onclick="location = './session.php' ">Back</button>
+    <button onclick="`${document.getElementsByTagName('html')[0].classList.toggle('invert')}`">Dark</button>
     <div id="filterBtns">
-      <p class="tac">Filters</p>
+      <p class="tac" style="margin: auto">Filters</p>
       <button onclick="fetchAndDisplayOrders('all')">All</button>
       <button onclick="fetchAndDisplayOrders('pending')">Pending</button>
       <button onclick="fetchAndDisplayOrders('wip')">WIP</button>
