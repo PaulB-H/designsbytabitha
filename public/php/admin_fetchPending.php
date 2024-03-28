@@ -2,31 +2,34 @@
 
   include("./session_start.php");
 
-  if ($_SESSION["roles"] !== "admin") {
-    echo(JSON_encode("No Access"));
-  } else if ($_SERVER["REQUEST_METHOD"] == "GET") {
-    include("./config_ordersDB.php");
+  if (!isset($_SESSION["roles"]) || $_SESSION["roles"] !== "admin") {
+    http_response_code(403); 
+    echo json_encode(["error" => "No Access"]);
+    exit();
+  }
+
+  if ($_SERVER["REQUEST_METHOD"] == "GET") {
+    include("../../config.php");
 
     $return_arr = array();
+
+    // Use prepared statements
+    $query = "SELECT * FROM orders WHERE OrderStatus = 'Pending'";
+    $stmt = $con->prepare($query);
+    $stmt->execute();
     
-    $query = "SELECT * FROM orders WHERE OrderStatus = 'Pending' ";
-    $result = mysqli_query($con,$query);
+    // Get the result set
+    $result = $stmt->get_result();
 
-    while($row = mysqli_fetch_array($result)){
-      $orderNum = $row['OrderNum'];
-      $Date = $row['Date'];
-      $Email = $row['Email'];
-      $orderStatus = $row['OrderStatus'];
+    // Fetch all rows as associative arrays
+    $return_arr = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
-      $return_arr[] = array(
-        "orderNum" => $orderNum,
-        "Date" => $Date,
-        "Email" => $Email,
-        "orderStatus" => $orderStatus,
-      );
-    }
-
+    // Echo the result as JSON
     echo json_encode($return_arr);
+
+    // Close the statement
+    $stmt->close();
+    $con->close();
   }
 
 ?>
