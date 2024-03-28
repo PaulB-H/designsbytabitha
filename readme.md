@@ -1,3 +1,7 @@
+### 2024 - Updates in Progress
+
+I built this years ago mostly as a way to see what PHP is like, and is still my only PHP project. While the order system is not getting much real use, I knew there were a lot of learning opportunities available in cleaning up the back end.
+
 <h1>Designs by Tabitha</h1>
 
 <img src="https://raw.githubusercontent.com/PaulB-H/designsbytabitha/e7b6c6db1559b963a37d3fae6e2cfd7191b825b4/images/vector/header.svg" />
