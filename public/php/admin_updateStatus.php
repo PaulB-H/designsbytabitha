@@ -1,29 +1,54 @@
 <?php
 
-  include("./session_start.php");
+include("./session_start.php");
 
-  if ($_SESSION["roles"] !== "admin") {
-    echo(JSON_encode("No Access"));
-  } else if ($_SERVER["REQUEST_METHOD"] == "PUT") {
-    include("./config_ordersDB.php");
+if(!isset($_SESSION["roles"]) || $_SESSION["roles"] !== "admin"){
+  http_response_code(403); 
+  echo(json_encode("No Access"));
+  exit();
+}
 
-    $json = file_get_contents('php://input');
-    $data = json_decode($json);
+if ($_SERVER["REQUEST_METHOD"] == "PUT") {
+  include("../../pdo_config.php");
 
-    $stmt = $con->prepare("UPDATE orders SET OrderStatus = ? WHERE OrderNum = ?");
-    $stmt->bind_param("si", $data[1], $data[0]);
+  $json = file_get_contents('php://input');
+  $data = json_decode($json);
 
-    if ($stmt->execute()) {
-      $result = "Updated Order " . $data[0] . " Status to " . $data[1] . " ";
-    } else {
-      $result = "SQL Err: " . $success . " ";
-      $success = $stmt->error;
-    }
+  $orderNum = $data[0];
+  $status = $data[1];
 
-    $stmt -> close();
-    $con -> close();
-
-    echo(JSON_encode($result));
-
+  if (!is_int($orderNum)) {
+    http_response_code(400);
+    echo json_encode(['error' => 'Order Num Integers Only']);
+    exit();
   }
+
+  if (!in_array($status, ["Pending", "WIP", "Canceled", "Complete"])) {
+    http_response_code(400); 
+    echo json_encode(['error' => 'Bad status, valid: Pending, WIP, Canceled, Complete']);
+    exit();
+  }
+
+  try {
+    $stmt = $pdo->prepare("UPDATE orders SET OrderStatus = :status WHERE OrderNum = :orderNum");
+    $stmt->bindParam(':status', $status);
+    $stmt->bindParam(':orderNum', $orderNum);
+    $stmt->execute();
+
+    $rowCount = $stmt->rowCount();
+
+    if ($rowCount > 0) {
+      echo json_encode("Order deleted");
+    } else {
+      http_response_code(404); 
+      echo json_encode(['error' => 'No order found!']);
+    }
+  } catch (PDOException $e) {
+    // echo "Error: " . $e->getMessage();
+    http_response_code(500); 
+    echo json_encode(['error' => 'DB Error']);
+  }
+
+}
+
 ?>
