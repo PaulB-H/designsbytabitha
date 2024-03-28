@@ -1,32 +1,28 @@
 <?php
 
-  include("./session_start.php");
+include("./session_start.php");
 
-  if ($_SESSION["roles"] !== "admin") {
-    echo(JSON_encode("No Access"));
-  } else if ($_SERVER["REQUEST_METHOD"] == "GET") {
-    include("./config_ordersDB.php");
-    
-    $return_arr = array();
-    
-    $query = "SELECT * FROM orders WHERE OrderStatus = 'Canceled' ";
-    $result = mysqli_query($con,$query);
+if(!isset($_SESSION["roles"]) || $_SESSION["roles"] !== "admin"){
+  http_response_code(403); 
+  echo(json_encode("No Access"));
+  exit();
+}
 
-    while($row = mysqli_fetch_array($result)){
-      $orderNum = $row['OrderNum'];
-      $Date = $row['Date'];
-      $Email = $row['Email'];
-      $orderStatus = $row['OrderStatus'];
+if ($_SERVER["REQUEST_METHOD"] == "GET") {
+  include("../../pdo_config.php");
 
-      $return_arr[] = array(
-        "orderNum" => $orderNum,
-        "Date" => $Date,
-        "Email" => $Email,
-        "orderStatus" => $orderStatus,
-      );
-    }
+  try {
+    $query = "SELECT * FROM orders WHERE OrderStatus = 'Canceled'";
+    $stmt = $pdo->prepare($query);
+    $stmt->execute();
 
-    echo json_encode($return_arr);
+    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    echo json_encode($result);
+  } catch (Exception $e) {
+    http_response_code(500);
+    echo json_encode(['error' => 'DB Error']);
   }
+}
 
 ?>
