@@ -1,32 +1,27 @@
 <?php
+include("./session_start.php");
 
-  include("./session_start.php");
+if (!isset($_SESSION["roles"]) || $_SESSION["roles"] !== "admin") {
+  http_response_code(403); 
+  echo json_encode(["error" => "No Access"]);
+  exit();
+}
 
-  if ($_SESSION["roles"] !== "admin") {
-    echo(JSON_encode("No Access"));
-  } else if ($_SERVER["REQUEST_METHOD"] == "GET") {
-    include("./config_ordersDB.php");
-    
-    $return_arr = array();
-    
-    $query = "SELECT * FROM orders";
-    $result = mysqli_query($con,$query);
+if ($_SERVER["REQUEST_METHOD"] == "GET") {
+  include("../../pdo_config.php");
 
-    while($row = mysqli_fetch_array($result)){
-      $orderNum = $row['OrderNum'];
-      $Date = $row['Date'];
-      $Email = $row['Email'];
-      $orderStatus = $row['OrderStatus'];
+  try {
+    $stmt = $pdo->query("SELECT * FROM orders");
+    $stmt->execute();
 
-      $return_arr[] = array(
-        "orderNum" => $orderNum,
-        "Date" => $Date,
-        "Email" => $Email,
-        "orderStatus" => $orderStatus,
-      );
-    }
+    $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    echo json_encode($return_arr);
+    echo json_encode($results);
+
+  } catch (Exception $e) {
+    http_response_code(500);
+    echo json_encode(['error' => 'DB Error']);
+    exit();
   }
-
+}
 ?>
