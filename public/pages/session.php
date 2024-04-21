@@ -14,8 +14,7 @@
       * {
         margin: 0px;
         padding: 0px;
-        /* color: black; */
-        /* word-wrap:normal; */
+        box-sizing: border-box;
       }
 
       body {
@@ -25,22 +24,7 @@
         height: 100vh;
       }
 
-      .hide {
-        display: none;
-      }
-
-      button {
-        padding: 3px 0;
-        font-size: 125%;
-        margin: 10px;
-        border: none;
-        width: 100%;
-        background-color: #575084;
-        color: white;
-        border-radius: 5px;
-      }
-
-      #container {
+      main {
         padding: 25px;
         display: flex;
         flex-direction: column;
@@ -51,22 +35,40 @@
         width: 100%;
       }
 
-      input {
-        text-align: center;
+      button {
+        padding: 5px 20px;
+        font-size: 125%;
+        border: none;
         width: 100%;
+        background-color: #575084;
+        color: white;
+        border-radius: 5px;
+      }
+
+      #account-buttons {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 1fr 1fr;
+        gap: 10px 10px;
+        grid-template-areas: ' . . ' ' . . ';
+      }
+
+      #account-buttons a {
+        margin: 10px;
       }
     </style>
   </head>
 
   <body>
-    <div id="container">
+    <main>
       <h1>Designs by Tabitha</h1>
       <br />
+
       <h3>Signed in as:</h3>
-      <p>
+      <p style="font-size: 20px; font-family: sans-serif; margin: 10px;">
         <?php
-          if($_SESSION["user"]===""||$_SESSION["user"]===undefined||$_SESSION["user"]===null){
-            echo "...Not signed in";
+          if (empty($_SESSION) || empty($_SESSION["user"])) {
+            echo "Not signed in";
           } else {
             echo $_SESSION["user"];
           }
@@ -75,83 +77,68 @@
 
       <br />
 
-      <div
-        class="grid-container"
-        style="
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          grid-template-rows: 1fr 1fr;
-          gap: 10px 10px;
-          grid-template-areas: ' . . ' ' . . ';
-        "
-      >
-        <?php
-          if($_SESSION["user"] != null){
-            echo '<div style="display: none;">'; 
-          } 
-        ?>
+      <div id="account-buttons">
+        <?php if (empty($_SESSION["user"])): ?>
 
-        <button onclick=" window.location.href='sign_in.php'">Log In</button>
+          <a href="./sign_in.php">
+            <button>Log In</button>
+          </a>
 
-        <button onclick=" window.location.href='sign_up.php'">Sign Up</button>
+          <a href="./sign_up.php">
+            <button>Sign Up</button>
+          </a>
 
-        <button onclick=" window.location.href='reset_password.php'">
-          Pass Reset
-        </button>
+          <a href="./reset_password.php">
+            <button>Pass Reset</button>
+          </a>
 
-        <button onclick=" window.location.href='mask_page.php'">
-          Back to Site
-        </button>
+          <a href="./mask_page.php">
+            <button>
+              Back to Site
+            </button>
+          </a>
 
-        <?php
-          if( $_SESSION["user"] != null ){
-            echo '</div>'; 
-          } 
-        ?>
+        <?php endif; ?>
 
-        <?php
-          if( $_SESSION["user"] === null ){
-            echo '<div style="display: none;">'; 
-          } 
-        ?>
-        
-        <button onclick=" window.location.href='./my_orders.php'">
-          View Orders
-        </button>
+        <?php if (!empty($_SESSION["user"])): ?>
 
-        <button onclick=" window.location.href='./profile.php'">
-          Profile
-        </button>
+          <a href="./my_orders.php">
+            <button>
+              View Orders
+            </button>
+          </a>
 
-        <button onclick=" sessionDestroy()">Logout</button>
+          <a href="./profile.php">
+            <button>
+              Profile
+            </button>
+          </a>
 
-        <button onclick="window.location.href='./change_password.php'">
-          Pass Change
-        </button>
+          <a href="#">
+            <button onclick="sessionDestroy()">Logout</button>
+          </a>
 
-        <button onclick="window.location.href='./mask_page.php'">Shop</button>
+          <a href="./change_password.php">
+            <button>
+              Pass Change
+            </button>
+          </a>
 
-        <?php
-          if($_SESSION["roles"] !== "admin"){
-            echo '<div style="display: none">'; } ?>
+          <a href="./mask_page.php">
+            <button>Shop</button>
+          </a>
+          <?php if (isset($_SESSION["roles"]) && $_SESSION["roles"] === "admin"): ?>
+            <a href="./admin.php">
+              <button>
+                Admin
+              </button>
+            </a>
+          <?php endif; ?>
 
-        <button
-          onclick=" window.location.href='./admin.php'"
-        >
-          Admin
-        </button>
+        <?php endif; ?> 
 
-        <?php
-          if($_SESSION["roles"] !== "admin"){
-            echo '</div>'; } ?>
-
-        <?php
-          if($_SESSION["user"] === null){
-            echo '</div>'; 
-          } 
-        ?>
       </div>
-    </div>
+    </main>
 
     <script>
       function sessionStatus() {
@@ -175,8 +162,8 @@
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function () {
           if (this.readyState == 4 && this.status == 200) {
-            sessionStatus();
-            getUser();
+            // sessionStatus();
+            // getUser();
             window.location.href =
               "./session.php";
           }
@@ -204,9 +191,6 @@
         xhttp.withCredentials = true;
         xhttp.send();
       }
-
-      // getUser();
-      // sessionStatus();
     </script>
   </body>
 </html>

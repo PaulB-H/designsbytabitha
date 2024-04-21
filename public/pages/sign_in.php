@@ -81,6 +81,9 @@
     $userName = $password = $email = "";
     $validUserName = $validPassword = $validEmail = "";
 
+    $myVar = 0;
+    $success = '';
+
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
       if (empty($_POST["userName"])) {
@@ -116,7 +119,7 @@
         
         $success ="Success";
 
-        include "../php/config.php";
+        include "../../config.php";
         
         $stmt = $con -> prepare('SELECT UserName, Password, TempPass, Email, Roles FROM users WHERE UserName = ?');
         $stmt -> bind_param('s', $validUserName); 
@@ -131,6 +134,9 @@
           $_SESSION["email"] = $email;
           $_SESSION["roles"] = $roles;
           $success = "Successfully logged in as " . $_SESSION["user"];
+          
+          session_regenerate_id(true);
+
           header('Location: ./sign_in_success.php');
         } else {
           $success = 'Invalid password.';

@@ -1,21 +1,43 @@
-*{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-body{
-    background-image: url(../images/vector/header.svg);
-    background-size: cover;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+body {
+  background-image: url(../images/vector/header.svg);
+  background-size: cover;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
 }
 
 .fancyBtn {
-    background-color: #575084;
-    color: white;
-    padding: 3px 0px;
-    border-radius: 5px;
+  background-color: #575084;
+  color: white;
+  padding: 3px 0px;
+  border-radius: 5px;
+}
+button,
+input#submit {
+  box-shadow: 4px 4px 0px rgb(149, 149, 149);
+}
+
+button:active,
+input#submit:active {
+  background-color: #2c3e50;
+  box-shadow: 2px 2px 0px rgb(149, 149, 149) !important;
+}
+
+input {
+  border-radius: 10px;
+  padding: 5px;
+  border: 1px solid black;
+}
+
+button,
+a,
+input#submit {
+  cursor: pointer;
 }

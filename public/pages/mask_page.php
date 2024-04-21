@@ -28,6 +28,27 @@
     />
     <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
     <link rel="stylesheet" href="../styles/mask_page.css" />
+
+    <style>
+      .item-container {
+        display: inline-block;
+        vertical-align: top;
+        width: 100%;
+      }
+
+
+      .maskimg {
+        display: inline-block;
+        vertical-align: middle;
+        width: 100%;
+        height: auto; 
+        min-height: 188px !important;
+      }
+
+      .loading {
+        content: url("../images/icons/loader.gif");
+      }
+    </style>
   </head>
 
   <body>
@@ -54,11 +75,12 @@
       </button>
 
       <?php
-        if($_SESSION["user"] != "") {
 
+        if (empty($_SESSION) || empty($_SESSION["user"])) {
+          echo "<div style='display: none;'>";
         } else {
-          echo "<div style='display: none;'>"; 
-        } 
+            
+        }
       ?>
 
       <button
@@ -69,11 +91,11 @@
       </button>
 
       <?php
-        if($_SESSION["user"] != "") {
-            
-        } else {
-          echo "</div>"; 
-        } 
+      if (empty($_SESSION) || empty($_SESSION["user"])) {
+        echo "</div>"; 
+      } else {
+          
+      }
       ?>
       
     </div>
@@ -130,7 +152,13 @@
 
     <div class="fade-in-container">
       <h1>LOADING...</h1>
+      <img id="loadingSpinner" src="../images/icons/loader.gif" alt="Loading..." />
     </div>
+
+    <!-- <div id="mask-item-container" class="">
+      EACH MASK ITEM APPENDED IN HERE 
+      <div id="overlay-container" class="overlay" style="display: none"></div>
+    </div> -->
 
     <div id="mask-item-container" class="">
       <!-- EACH MASK ITEM APPENDED IN HERE -->
@@ -155,20 +183,21 @@
       </div>
     </a>
 
-    <a
-      class="footer-container d-none"
+    <div
+      class="footer-container"
       style="color: lightgray"
-      href="https://www.linkedin.com/in/paulb-h/"
-      target="blank"
     >
-      <div class="footer">
+      <!-- <div class="footer">
         &copy; Web by Paul
         <i
           class="fas fa-link"
           style="margin-left: 5px; margin-top: 2px; font-size: 90%"
         ></i>
+      </div> -->
+      <div class="footer">
+        Preloader by <a href="https://icons8.com/" target="_blank" rel="noopener noreferrer">icons8</a>
       </div>
-    </a>
+    </div>
 
     <div id="myScriptContainer">
       <script
@@ -274,67 +303,129 @@
         //     getMasks();
         // }, 5000);
 
-        function getMasks() {
-          $.ajax({
-            url: "../php/get_masks.php",
-            type: "get",
-            dataType: "JSON",
-            success: function (response) {
-              // _.isEqual() to compare arrays 
-              // note underscore from lodash
-              if (_.isEqual(lastResponse, response)) {
-                console.log("DB Objects same, no update needed");
-              } else {
-                // console.log("DB Objects different");
-                let len = response.length;
-                var i;
-                for (i = 0; i < len; i++) {
-                  let id = response[i].MaskId;
-                  let fabricname = response[i].FabricName;
-                  let imgurl = response[i].ImgUrl;
-                  if (document.getElementById(fabricname) == null) {
-                    // console.log("Item does not exist, creating new mask_item");
-                    let mask_item = `
-                      <div class="item-container" id="${fabricname}">
-                          <img loading=lazy class="maskimg"  src="../${imgurl}">
-                          <div class="detail-container">
+        // function getMasks() {
+        //   $.ajax({
+        //     url: "../php/get_masks.php",
+        //     type: "get",
+        //     dataType: "JSON",
+        //     success: function (response) {
+        //       // _.isEqual() to compare arrays 
+        //       // note underscore from lodash
+        //       if (_.isEqual(lastResponse, response)) {
+        //         console.log("DB Objects same, no update needed");
+        //       } else {
+        //         console.log("DB Objects different");
+        //         let len = response.length;
+        //         var i;
+        //         for (i = 0; i < len; i++) {
+        //           let id = response[i].MaskId;
+        //           let fabricname = response[i].FabricName;
+        //           let imgurl = response[i].ImgUrl;
+        //           if (document.getElementById(fabricname) == null) {
+        //             // console.log("Item does not exist, creating new mask_item");
+        //             let mask_item = `
+        //               <div class="item-container" id="${fabricname}">
+        //                   <img loading=lazy class="maskimg"  src="../${imgurl}">
+        //                   <div class="detail-container">
 
-                            <h1> ${fabricname} </h1>
+        //                     <h1> ${fabricname} </h1>
 
-                            <?php
-                              if($_SESSION["user"] != "") {
+        //                     <?php
+
+        //                       if (empty($_SESSION) || empty($_SESSION["user"])) {
+        //                         echo "<a href='./session.php'><p>Login to order!</p></a>";
+        //                         echo "<div style='display: none;'>";
+        //                       } else {
                                   
-                              } else {
-                                echo "<a href='./session.php'><p>Login to order!</p></a>";
-                                echo "<div style='display: none;'>";
-                              }
-                            ?>
-                            
-                            <button onclick="addToCart('${fabricname}')" style="margin-bottom: 10px; border: none; padding: 5px;">Add to cart</button>
-
-                            <?php
-                              if($_SESSION["user"] != "") {
-                                  
-                              } else {
-                                echo "</div>";
-                              }
-                            ?>
+        //                       }
                               
-                          </div>
-                      </div>
-                  `;
-                    $("#mask-item-container").append(mask_item);
-                  }
-                }
-                maskItemsLoaded = true;
-                lastResponse = response;
-              }
-            },
-            error: function (XMLHttpRequest, textStatus, errorThrown) {
-              alert(`XMLHttpRequest err: ${errThrown}`);
-            },
-          });
-        } // END GETMASKS FUNCTION
+        //                     ?>
+                            
+        //                     <button onclick="addToCart('${fabricname}')" style="margin-bottom: 10px; border: none; padding: 5px;">Add to cart</button>
+
+        //                     <?php
+        //                     if (empty($_SESSION) || empty($_SESSION["user"])) {
+        //                       echo "</div>";
+        //                     } else {
+                                
+        //                     }
+                              
+        //                     ?>
+                              
+        //                   </div>
+        //               </div>
+        //           `;
+        //             $("#mask-item-container").append(mask_item);
+        //           }
+        //         }
+        //         maskItemsLoaded = true;
+        //         lastResponse = response;
+        //       }
+        //     },
+        //     error: function (XMLHttpRequest, textStatus, errorThrown) {
+        //       // alert(`XMLHttpRequest err: ${errorThrown}`);
+        //       console.error("XMLHttpRequest error:", XMLHttpRequest);
+        //       console.error("Status:", textStatus);
+        //       console.error("Error thrown:", errorThrown);
+        //       alert("Error occurred. Check console for details.");
+        //     },
+        //   });
+        // } // END GETMASKS FUNCTION
+
+        function getMasks() {
+  $.ajax({
+    url: "../php/get_masks.php",
+    type: "get",
+    dataType: "JSON",
+    success: function (response) {
+      if (_.isEqual(lastResponse, response)) {
+        console.log("DB Objects same, no update needed");
+      } else {
+        console.log("DB Objects different");
+        let len = response.length;
+
+        for (let i = 0; i < len; i++) {
+          let id = response[i].MaskId;
+          let fabricname = response[i].FabricName;
+          let imgurl = response[i].ImgUrl;
+
+          if (document.getElementById(fabricname) == null) {
+            let mask_item = `
+              <div class="item-container" id="${fabricname}">
+                <img loading="" class="maskimg" data-src="../${imgurl}" src="../images/icons/loader.gif" alt="Loading..." />
+                <div class="detail-container">
+                  <h1>${fabricname}</h1>
+                  <?php
+                    if (empty($_SESSION) || empty($_SESSION["user"])) {
+                      echo '<a href="./session.php"><p>Login to order!</p></a>';
+                      echo '<div style="display: none;">';
+                    }
+                  ?>
+                  <button onclick="addToCart('${fabricname}')" style="margin-bottom: 10px; border: none; padding: 5px;">Add to cart</button>
+                  <?php
+                    if (empty($_SESSION) || empty($_SESSION["user"])) {
+                      echo '</div>';
+                    }
+                  ?>
+                </div>
+              </div>
+            `;
+
+            $("#mask-item-container").append(mask_item);
+          }
+        }
+        maskItemsLoaded = true;
+        lastResponse = response;
+      }
+    },
+    error: function (XMLHttpRequest, textStatus, errorThrown) {
+      console.error("XMLHttpRequest error:", XMLHttpRequest);
+      console.error("Status:", textStatus);
+      console.error("Error thrown:", errorThrown);
+      alert("Error occurred. Check console for details.");
+    },
+  });
+}
 
         let cart;
         if (localStorage.getItem("cart") != null) {
@@ -346,6 +437,8 @@
         function addToCart(name) {
           // console.log(name)
 
+          // Default size is small, unless another size is selected from input
+          // Backend will only accept small, medium, or large
           let size = "small";
           let qnty = 1;
           let lastItem;
@@ -566,6 +659,36 @@
             });
           }
         }
+
+        window.setTimeout(() => {
+          let images = document.querySelectorAll(".maskimg");
+          images.forEach(function (image) {
+            // Replace the placeholder with the actual image source
+            image.src = image.getAttribute("data-src");
+
+            // Hide the loading spinner after the image is loaded
+            image.classList.remove("loading");
+              // });
+          });
+        }, 2000);
+
+        document.addEventListener("DOMContentLoaded", function () {
+          let images = document.querySelectorAll(".maskimg");
+
+          images.forEach(function (image) {
+            if (image.hasAttribute("data-src")) {
+              // image.addEventListener("load", function () {
+                console.log("Image loaded:", image.src);
+
+                // Replace the placeholder with the actual image source
+                image.src = image.getAttribute("data-src");
+
+                // Hide the loading spinner after the image is loaded
+                image.classList.remove("loading");
+              // });
+            }
+          });
+        });
       </script>
     </div>
   </body>

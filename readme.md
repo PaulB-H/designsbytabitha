@@ -2,16 +2,36 @@
 
 I built this years ago mostly as a way to see what PHP is like, and is still my only PHP project. While the order system is not getting much real use, I knew there were a lot of learning opportunities available in cleaning up the back end.
 
+Main Changes:
+
+Moved from CPannel to my own server with PHP/FPM and local MariaDB
+
+Updated to use PDO
+
+Replaced multiple statement queries with table join
+
+Implemented transactions when making changes across different tables that must be atomic
+
+Fixed cases where server and or client side validation was missing or incorrect.
+
+Compressed mask images and rescaled them (they were 3024 x 4032 before!). Added loading gif placeholder to the mask images
+
+---
+
+There is still more I could fix... but I got some lessons out of what I cleaned up.
+
+---
+
 <h1>Designs by Tabitha</h1>
 
 <img src="https://raw.githubusercontent.com/PaulB-H/designsbytabitha/e7b6c6db1559b963a37d3fae6e2cfd7191b825b4/images/vector/header.svg" />
 
-<h5><small>Made with:</small><br /> HTML, CSS, JS, PHP, MySQLi</h5>
+<h5><small>Made with:</small><br /> HTML, CSS, JS, PHP, MariaDB/PDO</h5>
 
 <a href="https://designsbytabitha.ca" target="_blank">https://designsbytabitha.ca</a>
 
 <h2>Description</h2>
-<p>A website for a designer to showcase her work, and also manage hand-made mask orders from friends and family</p>
+<p>A website for a designer to showcase her work, and also manage hand-made mask orders from friends and family. There was no payment for the masks so a payment system was not required. </p>
 
 <h2>Details</h2>
 <p>The logo on the homepage was made by taking a commissioned image and running it through a vector converter, turning it into an SVG.</p>
@@ -36,6 +56,6 @@ I built this years ago mostly as a way to see what PHP is like, and is still my 
 
 <h2>Tools</h2>
 <ul>
-<li><a href="https://cpanel.net/" target="_blank">cPanel</a></li>
-<li><a href="https://github.com/phpmyadmin/phpmyadmin" target="_blank">phpMyAdmin</a></li>
+<li><a href="https://cpanel.net/" target="_blank"><strike>cPanel</strike></a></li>
+<li><a href="https://github.com/phpmyadmin/phpmyadmin" target="_blank"><strike>phpMyAdmin</strike></a></li>
 </ul>

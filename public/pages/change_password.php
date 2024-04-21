@@ -2,8 +2,8 @@
 
     include("../php/session_start.php");
 
-    if($_SESSION["user"]===null){
-        header('Location: ./session.php');
+    if (empty($_SESSION) || empty($_SESSION["user"])) {
+      header('Location: ./session.php');
     }
 
 ?>
@@ -74,7 +74,7 @@
     
         if ($validInputs === 1){
             
-            include "../php/config.php";
+            include "../../config.php";
 
             $email = $_SESSION["email"];
             

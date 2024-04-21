@@ -1,30 +1,39 @@
 <?php
 
-  include("./session_start.php");
+include("./session_start.php");
 
-  if ($_SESSION["roles"] !== "admin") {
-    echo(JSON_encode("No Access"));
-  } else if ($_SERVER["REQUEST_METHOD"] == "PUT") {
-    include("./config_ordersDB.php");
+if(!isset($_SESSION["roles"]) || $_SESSION["roles"] !== "admin"){
+  http_response_code(403); 
+  echo(json_encode("No Access"));
+  exit();
+}
 
-    $json = file_get_contents('php://input');
-    $data = json_decode($json);
+if ($_SERVER["REQUEST_METHOD"] == "PUT") {
+  include("../../pdo_config.php");
 
-    $stmt = $con->prepare("UPDATE order_items SET Made = ? WHERE OrderNum = ? AND Item = ?");
-    $stmt->bind_param("iis", $data[2], $data[0], $data[1]);
+  $json = file_get_contents('php://input');
+  $data = json_decode($json);
+
+  try {
+    $stmt = $pdo->prepare("UPDATE order_items SET Made = :made WHERE OrderNum = :orderNum AND Item = :item AND Size = :size");
+    $stmt->bindParam(':made', $data[3], PDO::PARAM_INT);
+    $stmt->bindParam(':orderNum', $data[0], PDO::PARAM_INT);
+    $stmt->bindParam(':item', $data[1], PDO::PARAM_STR);
+    $stmt->bindParam(':size', $data[2], PDO::PARAM_STR);
 
     if ($stmt->execute()) {
-      $result = "Updated Order " . $data[0] . " Set Item " . $data[1] . " Items Made to " . $data[2] . " ";
+      $result = "Updated Order " . $data[0] . " Set Item " . $data[1] . $data[2] . " Items Made to " . $data[3] . " ";
     } else {
-      $result = "SQL Err: " . $success . " ";
-      $success = $stmt->error;
-    };
+      // $result = "SQL Err: " . implode(", ", $stmt->errorInfo());
+      $result = "SQL Err";
+    }
+  } catch (PDOException $e) {
+    // $result = "PDO Err: " . $e->getMessage();
+    $result = "error: DB Error";
+  }
 
-    $stmt -> close();
-    $con -> close();
+  echo(json_encode($result));
 
-    echo(JSON_encode($result));
-
-  };
+};
 
 ?>

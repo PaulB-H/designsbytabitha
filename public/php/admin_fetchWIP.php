@@ -1,10 +1,13 @@
 <?php
-
   include("./session_start.php");
 
-  if ($_SESSION["roles"] !== "admin") {
-    echo(JSON_encode("No Access"));
-  } else if ($_SERVER["REQUEST_METHOD"] == "GET") {
+  if (!isset($_SESSION["roles"]) || $_SESSION["roles"] !== "admin") {
+    http_response_code(403); 
+    echo json_encode(["error" => "No Access"]);
+    exit();
+  }
+
+  if ($_SERVER["REQUEST_METHOD"] == "GET") {
     include("../../config.php");
 
     $return_arr = array();

@@ -1,3 +1,4 @@
 config.php
 pdo_config.php
+pdo_config_get.php
 smtp_config.php

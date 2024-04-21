@@ -1,13 +1,11 @@
 <?php
 
-  include("../php/session_start.php");
+include("../php/session_start.php");
 
-  $error = "";
-  if ($_SESSION["user"] == ""){
-      $error = "<div style='test-align: center;'>You are not signed in!!</div>";
-  } else {
-  
-  }
+$error = "";
+if ($_SESSION["user"] == ""){
+  $error = "You are not signed in";
+} 
     
 ?>
 
@@ -22,10 +20,14 @@
         color: #ff0000;
       }
 
-      #container {
+      main {
         background-color: white;
         padding: 25px;
         width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
       }
 
       button {
@@ -48,45 +50,35 @@
   </head>
 
   <body>
-    <div
-      id="container"
-      style="
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-      "
-    >
+    <main>
       <h1><?php echo $error; ?></h1>
 
-      <?php
-        if($error != ""){
-            echo "<div style='display:none;'>"; } ?>
+      <?php if (empty($error)) : ?>
 
-      <h3>
-        Logged in as:
-        <?php echo $_SESSION["user"]; ?>
-      </h3>
+        <h3>
+          Logged in as:
+          <?php echo $_SESSION["user"]; ?>
+        </h3>
 
-      <p>
-        Email:
-        <?php echo $_SESSION["email"]; ?>
-      </p>
+        <p>
+          Email:
+          <?php echo $_SESSION["email"]; ?>
+        </p>
 
-      <br />
-      <a href="#"> <!-- ./update_email.html -->
-        <button class="fancyBtn"><strike>Change Email</strike></button>
-      </a>
+        <br />
+        
+        <a href="#"> <!-- ./update_email.html -->
+          <button class="fancyBtn"><strike>Change Email</strike></button>
+        </a>
 
-      <br /><br />
+        <br />
+        <br />
 
-      <?php
-        if($error != ""){
-          echo "</div>"; } ?>
+      <?php endif; ?>
 
       <a href="./session.php">
         <button class="fancyBtn">..Back</button>
       </a>
-    </div>
+    </main>
   </body>
 </html>
