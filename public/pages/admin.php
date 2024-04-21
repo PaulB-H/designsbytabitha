@@ -31,51 +31,61 @@ if(!isset($_SESSION["roles"]) || $_SESSION["roles"] !== "admin"){
   </head>
   <body>
     <h3>DBT Admin</h3>
+
     <button onclick="location = './session.php' ">Back</button>
     <button onclick="`${document.getElementsByTagName('html')[0].classList.toggle('invert')}`">Dark</button>
+
+    <!-- Filters -->
     <div id="filterBtns">
       <p class="tac" style="margin: auto">Filters</p>
-      <button onclick="fetchAndDisplayOrders('all')">All</button>
-      <button onclick="fetchAndDisplayOrders('pending')">Pending</button>
-      <button onclick="fetchAndDisplayOrders('wip')">WIP</button>
-      <button onclick="fetchAndDisplayOrders('canceled')">Canceled</button>
-      <button onclick="fetchAndDisplayOrders('complete')">Complete</button>
+      <button onclick="searchByStatus('fetchAll')">All</button>
+      <button onclick="searchByStatus('fetchPending')">Pending</button>
+      <button onclick="searchByStatus('fetchWIP')">WIP</button>
+      <button onclick="searchByStatus('fetchCanceled')">Canceled</button>
+      <button onclick="searchByStatus('fetchComplete')">Complete</button>
     </div>
-    <hr>
-    Order # <!---or Email---> <input onchange="searchQuery = this.value" type="text" name="" id="orderOrEmail" />
-    <button onclick="fetchAndDisplaySingle(searchQuery)">Search</button>
+
     <hr />
+
+    <!-- Search Form -->
+    <div style="padding: 10px;">
+      <form onsubmit="submitSearchForm(event)">
+        <p style="margin-bottom: 5px;">Order Number or Email</p>
+        <input style="padding: 5px;" type="text" name="orderOrEmail" id="orderOrEmail" value="" />
+        <button type="submit">Search</button>
+      </form>
+    </div>
+
+    <hr />
+
+    <!-- Container for search results -->
     <div id="orderlist"></div>
 
-    <div id="dialog-confirm" title="Confirm Delete Order" style="visibility: hidden;">
-      
-    </div>
+    <div id="dialog-confirm" title="Confirm Delete Order" style="visibility: hidden;"></div>
 
     <script>
-      const orderlist = document.getElementById("orderlist");
-      let lastFilter = "all";
-      let singleOrder = false;
-      let lastOrder;
 
-      function fetchAndDisplayOrders(filter) {
+      /**
+       * Keeps track of the last filter or search
+       */
+      const searchState = {
+        filter: "fetchAll",
+        orderNum: null,
+        email: null,
+      }
+
+      /**
+       * Triggered by the status filter buttons
+       */
+      function searchByStatus(filter) {
+        const orderlist = document.getElementById("orderlist");
         orderlist.innerHTML = "";
-        lastFilter = filter;
-        singleOrder = false;
-        let url;
 
-        if (filter === "all") {
-          url = "fetchAll";
-        } else if (filter === "pending") {
-          url = "fetchPending";
-        } else if (filter === "wip") {
-          url = "fetchWIP";
-        } else if (filter === "complete") {
-          url = "fetchComplete";
-        } else if (filter === "canceled") {
-          url = "fetchCanceled";
-        }
+        searchState.filter = filter;
+        searchState.orderNum = null;
+        searchState.email = null;
 
-        fetch(`../php/admin_${url}.php`, {
+        fetch(`../php/admin_${filter}.php`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -83,212 +93,439 @@ if(!isset($_SESSION["roles"]) || $_SESSION["roles"] !== "admin"){
         })
           .then((response) => response.json())
           .then((data) => {
-            // orderlist.innerHTML = "";
             orderlist.insertAdjacentHTML(
               "afterbegin",
               `
-              <h3>${filter.toUpperCase()} Orders</h3>
-              <hr>
+                <h3 style="margin: 10px 0;">
+                  ${filter.toUpperCase()} Orders
+                </h3>
+                <hr style="margin-bottom: 10px">
               `
             );
+
+            if (data.length <= 0) {
+              orderlist.insertAdjacentHTML(
+                "beforeend",
+                `
+                  <p style="margin-top: 10px; font-weight: bold;">No orders found</p>
+                `
+              );
+              return;
+            }
+
             if (data.length > 0) {
               data.forEach(function (value, index) {
                 let date = new Date(value.Date);
-                date = date.toDateString(); 
+                date = date.toDateString();
+
                 orderlist.insertAdjacentHTML(
                   "beforeend",
-                  `
-                  <p>Order # <strong>${value.orderNum}</strong></p>
-                  <p>&nbsp;${value.Email}</p>
-                  <p>&nbsp;&nbsp;${date}</p>
-                  <br>
-                  <button onclick="fetchAndDisplaySingle(${value.orderNum})">View Details</button>
-                  <br><br>
-                  <p>Status: <strong style="background: yellow; padding: 3px;">${value.orderStatus}</strong>
-                    <br>
-                    <p>Set Status:</p>
-                    <div class="updateStatusBtns">
-                      <button onclick="updateStatus([${value.orderNum}, 'Pending'])">Pending</button>
-                      <button onclick="updateStatus([${value.orderNum}, 'WIP'])">WIP</button>
-                      <button onclick="updateStatus([${value.orderNum}, 'Canceled'])">Canceled</button>
-                      <button onclick="updateStatus([${value.orderNum}, 'Complete'])">Complete</button>
-                    </div>
-                  </p>
-                  <button class="deleteBtn" onclick="deleteOrder(${value.orderNum})">Delete</button>
-                  <br><br>
-                  <hr>
-                  `
+                  create_order_summary(
+                    value.OrderNum,
+                    value.Email,
+                    date,
+                    value.OrderStatus,
+                    true
+                  )
                 );
               });
-            } else { orderlist.insertAdjacentHTML("beforeend",
-              `
-              <p>No orders found</p>
-              `
-            )}
+            }
           })
           .catch((error) => {
             console.error("Error:", error);
           });
       }
-      fetchAndDisplayOrders("all");
+      searchByStatus("fetchAll");
 
-      function deleteOrder (num) {
-        $( "#dialog-confirm" ).dialog({
+      /**
+       * Takes in order details and returns HTML summary
+       * 
+       * showDetails controls if the summary will display the "Show Details" button
+       */
+      const create_order_summary = (
+        OrderNum,
+        Email,
+        date,
+        OrderStatus,
+        showDetails
+      ) => {
+        return `
+          <br />
+          <h3>Order # ${OrderNum} Details</h3>
+          <br />
+          <p>Customer: ${Email}</p>
+          <p>Placed:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ${date}</p>
+          <br />
+          ${
+            showDetails
+              ? `<button onclick="fetchOrderDetails(${OrderNum})">View Details</button><br><br>`
+              : ""
+          }
+          <h3 style="background: yellow; max-width: max-content; padding: 5px;">Status: ${OrderStatus}</h3>
+          <br>
+          <p style="margin-left: 75px; font-family: sans-serif">Set Status:</p>
+          <div style="max-width: 300px;" class="updateStatusBtns">
+            <button onclick="updateStatus([${OrderNum}, 'Pending'])">Pending</button>
+            <button onclick="updateStatus([${OrderNum}, 'WIP'])">WIP</button>
+            <button onclick="updateStatus([${OrderNum}, 'Canceled'])">Canceled</button>
+            <button onclick="updateStatus([${OrderNum}, 'Complete'])">Complete</button>
+          </div>
+          <button class="deleteBtn" onclick="deleteOrder(${OrderNum})">Delete</button>
+          <br><br>
+          <hr>
+        `;
+      };
+
+      /**
+       * Takes in an array of order items
+       * Returns an array of HTML elements for each item
+       */
+      const create_order_details = (orderData) => {
+        const itemsArr = [];
+        orderData.orderItems.forEach((item) => {
+          const itemsMadeBg = item.Made === item.Qnty ? "green" : "red";
+
+          const newItem = `
+            <br />
+            <p>Fabric: ${item.Item}</p>
+            <p>Size: &nbsp;&nbsp;&nbsp;${item.Size}</p>
+            <br />
+            <p>Number Ordered: ${item.Qnty}</p>
+            <p>Number Made:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color: ${itemsMadeBg}; padding: 3px">${item.Made}</span></p>
+            <br />
+            <button class="updateItemsMadeBtn" onclick="updateItemsMade(
+              {
+                'orderNum': ${orderData.OrderNum}, 
+                'fabricName': '${item.Item}',
+                'size': '${item.Size}',
+                'numOrdered': ${item.Qnty}, 
+                'numMade': ${item.Made}, 
+                'addOrSub': 'sub'
+              }
+            )">-1</button>
+            <button class="updateItemsMadeBtn" onclick="updateItemsMade(
+              {
+                'orderNum': ${orderData.OrderNum}, 
+                'fabricName': '${item.Item}', 
+                'size': '${item.Size}',
+                'numOrdered': ${item.Qnty}, 
+                'numMade': ${item.Made}, 
+                'addOrSub': 'add'
+              }
+            )">+1</button>
+            
+            <br><br />
+            <hr>
+          `;
+
+          itemsArr.push(newItem);
+        });
+
+        return itemsArr;
+      };
+
+      /**
+       * On search submission
+       * We ensure a valid email or integer and call the appropriate function
+       */
+      function submitSearchForm(event) {
+        event.preventDefault();
+
+        const orderList = document.getElementById("orderlist");
+
+        const form = event.target;
+        const searchQuery = form.elements["orderOrEmail"].value;
+        const searchQueryInt = parseInt(searchQuery);
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const validEmail = emailRegex.test(searchQuery);
+
+        // If query is not a valid email AND not a positive integer, fail
+        if (
+          !validEmail &&
+          (isNaN(searchQueryInt) || searchQueryInt % 1 !== 0 || searchQueryInt <= 0)
+        ) {
+          console.log("Invalid query, positive integer or email only");
+
+          orderList.innerHTML = `<p style="margin-top: 15px;">Invalid query, positive integer or email only</p>`;
+
+          return;
+        }
+
+        if (validEmail) {
+          searchByEmail(searchQuery);
+        } else {
+          // email was not valid but searchQuery is a positive integer
+          searchByOrderNum(searchQuery);
+        }
+      }
+
+      function searchByEmail(email) {
+
+        searchState.filter = null;
+        searchState.orderNum = null;
+        searchState.email = email;
+
+        fetch(`../php/admin_fetchAllByEmail.php`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(email),
+        })
+        .then((response) => response.json())
+        .then((data) => {
+          orderlist.innerHTML = "";
+          orderlist.insertAdjacentHTML(
+            "afterbegin",
+            `
+            <h3 style="margin: 10px 0;">All orders for: ${email.toLowerCase()}</h3>
+            <hr style="margin-bottom: 10px">
+            `
+          );
+          if (data.length > 0) {
+            data.forEach(function (value, index) {
+              let date = new Date(value.Date);
+              date = date.toDateString();
+
+              orderlist.insertAdjacentHTML(
+                "beforeend",
+                create_order_summary(
+                  value.OrderNum,
+                  value.Email,
+                  date,
+                  value.OrderStatus,
+                  true
+                )
+              );
+            });
+          } else {
+            orderlist.insertAdjacentHTML(
+              "beforeend",
+              `
+            <p style="margin-top: 10px; font-weight: bold;">No orders found</p>
+            `
+            );
+          }
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
+      }
+
+      function searchByOrderNum(ordernum) {
+        const orderList = document.getElementById("orderlist");
+
+        searchState.filter = null;
+        searchState.orderNum = ordernum;
+        searchState.email = null;
+
+        fetch(`../php/admin_fetchByOrderNum.php`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(ordernum),
+        })
+        .then((response) => response.json())
+        .then((orderData) => {
+          // if (orderData.error) {
+          //   orderlist.innerHTML = "";
+
+          //   orderlist.insertAdjacentHTML("beforeend",
+          //     `
+          //     <p style="margin-top: 10px;">${orderData.error}</p>
+          //     `
+          //   )
+          //   return;
+          // }
+
+          orderlist.innerHTML = "";
+
+          if (!orderData) {
+            orderlist.insertAdjacentHTML(
+              "beforeend",
+              `
+                p style="margin-top: 10px;">No Orders Found</p>
+              `
+            );
+            return;
+          }
+
+          const date = new Date(orderData.Date).toDateString();
+
+          // ( OrderNum, Email, date, OrderStatus, showDetails )
+          const orderDetails = create_order_summary(
+            orderData.OrderNum,
+            orderData.Email,
+            date,
+            orderData.OrderStatus,
+            true
+          );
+
+          orderlist.insertAdjacentHTML("afterbegin", orderDetails);
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
+      }
+
+      //****/
+      // https://jqueryui.com/dialog/#modal-confirmation
+      //****/
+      function deleteOrder(num) {
+        $("#dialog-confirm").dialog({
           resizable: false,
           height: "auto",
           width: "auto",
           modal: true,
           title: `Delete Order ${num} ?`,
-          buttons: {
-            "YES \n Delete": function() {
-              orderlist.innerHTML = "";
-              $( this ).dialog( "close" );
-              fetch(`../php/admin_deleteOrder.php`, {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify(num),
-              })
+          buttons: [
+            {
+              text: "YES \n Delete",
+              click: function () {
+                orderlist.innerHTML = "";
+                $(this).dialog("close");
+                fetch(`../php/admin_deleteOrder.php`, {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify(num),
+                })
                 .then((response) => response.json())
                 .then((data) => {
-                  console.log(data)
-                  if(singleOrder === false){
-                    fetchAndDisplayOrders(lastFilter);
-                  } else {
-                    fetchAndDisplaySingle(lastOrder);
-                  }
-                })
+                  searchByStatus("all");
+                });
+              },
             },
-            "NO \n Cancel": function() {
-              $( this ).dialog( "close" );
-            }
-          }
+            {
+              text: "NO \n Cancel",
+              click: function () {
+                $(this).dialog("close");
+              },
+            },
+          ],
         });
       }
 
-      function fetchAndDisplaySingle (ordernum) {
-        singleOrder = true;
-        lastOrder = ordernum;
+      /**
+       * Fetches and displays the details for a specific order number
+       * 
+       * Here we call create_order_summary with false as last param, so the "View Details"
+       * button is not generated again (since we are already viewing the details)
+       */
+      function fetchOrderDetails(ordernum) {
+        const orderList = document.getElementById("orderlist");
+        orderlist.innerHTML = "";
+
+        searchState.filter = null;
+        searchState.orderNum = ordernum;
+        searchState.email = null;
+
         fetch(`../php/admin_fetchDetails.php`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(ordernum),
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(ordernum),
         })
           .then((response) => response.json())
-          .then((data) => {
-            orderlist.innerHTML = "";
-            // First array item is order details
-            if(data.length > 0){
-              let details = data.shift();
-              let date = new Date(details.Date)
-              date = date.toDateString();
+          .then((orderData) => {
+            if (orderData.error) {
               orderlist.insertAdjacentHTML(
-                "afterbegin",
+                "beforeend",
                 `
-                <h3>Order # ${details.orderNum} Details</h3>
-                <p>&nbsp; ${details.Email}</p>
-                <p>&nbsp;&nbsp; ${date}</p>
-                <h3 style="background: yellow;">Status: ${details.orderStatus}</h3>
-                <br>
-                <div class="updateStatusBtns">
-                  <button onclick="updateStatus([${details.orderNum}, 'Pending'])">Pending</button>
-                  <button onclick="updateStatus([${details.orderNum}, 'WIP'])">WIP</button>
-                  <button onclick="updateStatus([${details.orderNum}, 'Canceled'])">Canceled</button>
-                  <button onclick="updateStatus([${details.orderNum}, 'Complete'])">Complete</button>
-                </div>
-                <button class="deleteBtn" onclick="deleteOrder(${details.orderNum})">Delete</button>
-                <br><br>
-                <hr>
+                <p style="margin-top: 10px;">${orderData.error}</p>
                 `
               );
-              data.forEach(function (value, index) {
-                orderlist.insertAdjacentHTML(
-                  "beforeend",
-                  `
-                  <p>Fabric: ${value.item}</p>
-                  <p>Size: ${value.size}</p>
-                  <p>Number Ordered: ${value.qnty}</p>
-                  <p>Number Made: ${value.made}</p>
-                  <button onclick="updateItemsMade(
-                    {
-                      'orderNum': ${details.orderNum}, 
-                      'fabricName': '${value.item}', 
-                      'numOrdered': ${value.qnty}, 
-                      'numMade': ${value.made}, 
-                      'addOrSub': 'sub'
-                    }
-                  )">-1</button>
-                  <button onclick="updateItemsMade(
-                    {
-                      'orderNum': ${details.orderNum}, 
-                      'fabricName': '${value.item}', 
-                      'numOrdered': ${value.qnty}, 
-                      'numMade': ${value.made}, 
-                      'addOrSub': 'add'
-                    }
-                  )">+1</button>
-                  
-                  <br><br>
-                  <hr>
-                  `
-                );
-              });
-            } else {
-              orderlist.insertAdjacentHTML("beforeend",
-                `
-                <p>No Orders Found</p>
-                `
-              )
+              return;
             }
+
+            if (!orderData) {
+              orderlist.insertAdjacentHTML(
+                "beforeend",
+                `
+                <p style="margin-top: 10px;">No Orders Found</p>
+                `
+              );
+              return;
+            }
+
+            const date = new Date(orderData.Date).toDateString();
+
+            // ( OrderNum, Email, date, OrderStatus, showDetails )
+            const orderSummary = create_order_summary(
+              orderData.OrderNum,
+              orderData.Email,
+              date,
+              orderData.OrderStatus,
+              false
+            );
+            orderlist.insertAdjacentHTML("afterbegin", orderSummary);
+
+            const orderDetailsArr = create_order_details(orderData);
+            orderDetailsArr.forEach((orderItem) => {
+              orderlist.insertAdjacentHTML("beforeend", orderItem);
+            });
           })
           .catch((error) => {
             console.error("Error:", error);
           });
       }
 
-      // Incomming object for updateItemsMade:
-      // {
-      //  'orderNum': ${details.orderNum}, 
-      //  'fabricName': '${value.item}', 
-      //  'numOrdered': ${value.qnty}, 
-      //  'numMade': ${value.made}, 
-      //  'addOrSub': 'add || sub'
-      // }
-      function updateItemsMade (obj) {
-        if (obj.addOrSub === 'sub') {
+      
+      /**
+       * Check if updateItemsMade should be run, and if so run it
+       * Incoming object
+       * {
+       *  'orderNum': ${details.orderNum},
+       *  'fabricName': '${value.item}',
+       *  'size': '${item.Size}',
+       *  'numOrdered': ${value.qnty},
+       *  'numMade': ${value.made},
+       *  'addOrSub': 'add || sub'
+       * }
+       */
+      function updateItemsMade(obj) {
+        const orderList = document.getElementById("orderlist");
+
+        if (obj.addOrSub === "sub") {
           if (obj.numMade === 0) {
             // console.log("Cant go lower")
           } else {
-            orderlist.innerHTML = "";
-            let updateItemsMade = obj.numMade -1;
+            let updateItemsMade = obj.numMade - 1;
             let arr = [
               obj.orderNum,
-              `${obj.fabricName}`,
+              obj.fabricName,
+              obj.size,
               updateItemsMade,
             ];
-            updateItemsMadeFetch(arr)
+            updateItemsMadeFetch(arr);
           }
-        } else if (obj.addOrSub === 'add') {
+        } else if (obj.addOrSub === "add") {
           if (obj.numMade === obj.numOrdered) {
             // console.log("Cant go higher")
           } else {
-            orderlist.innerHTML = "";
-            let updateItemsMade = obj.numMade +1;
+            let updateItemsMade = obj.numMade + 1;
             let arr = [
               obj.orderNum,
-              `${obj.fabricName}`,
+              obj.fabricName,
+              obj.size,
               updateItemsMade,
             ];
-            updateItemsMadeFetch(arr)
+            updateItemsMadeFetch(arr);
           }
         }
       }
 
-      // Incoming Array: [orderNum, "fabricName", udpateItemsMade]
-      function updateItemsMadeFetch (arr) {
+      /**
+       * Updates the items made for an item in an order
+       * then refreshes the order details
+       *
+       * Incoming array: [orderNum, "fabricName", "size", updateItemsMade];
+       */
+      function updateItemsMadeFetch(arr) {
         fetch(`../php/admin_updateItemsMade.php`, {
           method: "PUT",
           headers: {
@@ -296,18 +533,24 @@ if(!isset($_SESSION["roles"]) || $_SESSION["roles"] !== "admin"){
           },
           body: JSON.stringify(arr),
         })
-          .then((response) => response.json())
-          .then((data) => {
-            fetchAndDisplaySingle(lastOrder);
-          })
-          .catch((error) => {
-            console.error("Error:", error);
-          });
+        .then((response) => response.json())
+        .then((data) => {
+          fetchOrderDetails(searchState.orderNum);
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
       }
 
-      // orderNumSt = array [orderNum, status];
+      /**
+       * Updates the status of an order then refreshes view
+       *
+       * Incoming array: [orderNum, status];
+       */
       function updateStatus(orderNumSt) {
+        const orderList = document.getElementById("orderlist");
         orderlist.innerHTML = "";
+
         fetch("../php/admin_updateStatus.php", {
           method: "PUT",
           headers: {
@@ -315,39 +558,20 @@ if(!isset($_SESSION["roles"]) || $_SESSION["roles"] !== "admin"){
           },
           body: JSON.stringify(orderNumSt),
         })
-          .then((response) => response.json())
-          .then((data) => {
-            // console.log("Success:", data);
-            if(singleOrder === false){
-              fetchAndDisplayOrders(lastFilter);
-            } else {
-              fetchAndDisplaySingle(lastOrder);
-            }
-          })
-          .catch((error) => {
-            console.error("Error:", error);
-          });
+        .then((response) => response.json())
+        .then((data) => {
+          if (searchState.filter) {
+            searchByStatus(searchState.filter);
+          } else if (searchState.orderNum) {
+            fetchOrderDetails(searchState.orderNum);
+          } else if (searchState.email) {
+            searchByEmail(searchState.email)
+          }
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
       }
-
-      function refreshLastFilter(lastFilter){
-        if (lastFilter === "all") {
-          fetchAndDisplayOrders();
-        } else if (lastFilter === "pending") {
-          fetchAndDisplayPending();
-        } else if (lastFilter === "wip") {
-          fetchAndDisplayWIP();
-        } else if (lastFilter === "canceled") {
-          fetchAndDisplayCanceled();
-        } else if (lastFilter === "complete") {
-          fetchAndDisplayComplete();
-        }
-      }
-
-      function searchOrderOrEmail() {
-        let query = document.getElementById("orderOrEmail").value;
-        alert(`You would have searched for "${query}"`);
-      }
-
     </script>
   </body>
 </html>
